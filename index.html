@@ -3,186 +3,943 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>可排序的表格</title>
+    <title>京東快遞服務申請表</title>
     
-    <!-- CSS 樣式 -->
     <style>
+        :root {
+            --bg-primary: #fdfcfb;
+            --bg-secondary: #ffffff;
+            --accent-red: #c00000;
+            --accent-green: #10b981;
+            --accent-coral: #e63946;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-light: #e5e7eb;
+            --border-focus: #c00000;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 1rem;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 900px;
             margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
         }
 
-        p {
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
             text-align: center;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .table {
-            width: 100%;
-            border: 1px solid #eee;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .table-header {
-            display: flex;
-            background-color: #333;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .header__item {
-            flex: 1;
-            padding: 12px 15px;
-        }
-
-        .filter__link {
-            color: #fff;
-            text-decoration: none;
+            margin-bottom: 3rem;
             position: relative;
-            display: inline-block;
-            padding-right: 15px;
         }
 
-        /* 排序箭頭圖示 */
-        .filter__link::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            border: 4px solid transparent;
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-coral) 50%, #990000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
         }
 
-        .filter__link.desc::after {
-            border-top-color: #fff;
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
         }
 
-        .filter__link.asc::after {
-            border-bottom-color: #fff;
+        .form-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
         }
 
-        .table-content {
-            display: flex;
-            flex-direction: column;
+        .form-section {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .table-row {
-            display: flex;
-            border-bottom: 1px solid #eee;
-        }
-
-        .table-row:last-child {
+        .form-section:last-child {
             border-bottom: none;
         }
 
-        .table-row:hover {
-            background-color: #f1f1f1;
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .table-data {
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .delivery-options {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            border-color: var(--border-focus);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(192, 0, 0, 0.15);
+        }
+
+        .product-card.selected {
+            border-color: var(--accent-red);
+            background: rgba(192, 0, 0, 0.02);
+        }
+
+        .product-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+            background: var(--bg-secondary);
+        }
+
+        .product-checkbox.checked {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .product-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .product-price-container {
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: normal;
+        }
+
+        .product-price {
+            font-family: monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .discount-badge {
+            background: #fee2e2;
+            color: var(--accent-red);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid #fca5a5;
+            display: inline-block;
+        }
+        
+        .price-note {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            min-height: 2.5em;
+        }
+
+        .service-type-toggle {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            margin-bottom: 1rem;
+            gap: 4px;
+        }
+
+        .service-btn {
             flex: 1;
-            padding: 12px 15px;
-            color: #333;
+            padding: 0.5rem 0.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .service-btn.active {
+            background: #ffffff;
+            color: var(--accent-red);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 💥 重量選擇區塊（紅調突出版） 💥 */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            opacity: 0.6;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            border: 2px dashed var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            margin-top: 0.5rem;
+        }
+
+        .product-card.selected .quantity-controls {
+            opacity: 1;
+            pointer-events: auto;
+            background: #fef2f2; /* 溫暖柔和紅底色 */
+            border: 2px solid var(--accent-red); /* 紅色實線邊框 */
+            box-shadow: 0 4px 12px rgba(192, 0, 0, 0.12);
+        }
+
+        .quantity-label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .quantity-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-input {
+            width: 105px;
+            padding: 0.5rem 0.4rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--accent-red);
+            background: #ffffff;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px rgba(192, 0, 0, 0.25);
+        }
+
+        .unit-badge {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--accent-red);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .payment-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-red);
+        }
+
+        .order-summary {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.95rem;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-light);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .floating-total {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-light);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .floating-total.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .floating-total-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .floating-total-amount {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        @media (max-width: 768px) {
+            .products-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .payment-options { flex-direction: column; gap: 1rem; }
+            .floating-total { bottom: 1rem; right: 1rem; left: 1rem; }
         }
     </style>
 </head>
 <body>
-
-    <p>Sort Table Rows by Clicking on the Table Headers - Ascending and Descending (jQuery)</p>
     <div class="container">
-        <div class="table">
-            <div class="table-header">
-                <div class="header__item"><a id="name" class="filter__link" href="#">Name</a></div>
-                <div class="header__item"><a id="wins" class="filter__link filter__link--number" href="#">Wins</a></div>
-                <div class="header__item"><a id="draws" class="filter__link filter__link--number" href="#">Draws</a></div>
-                <div class="header__item"><a id="losses" class="filter__link filter__link--number" href="#">Losses</a></div>
-                <div class="header__item"><a id="total" class="filter__link filter__link--number" href="#">Total</a></div>
-            </div>
-            <div class="table-content">    
-                <div class="table-row">        
-                    <div class="table-data">Tom</div>
-                    <div class="table-data">2</div>
-                    <div class="table-data">0</div>
-                    <div class="table-data">1</div>
-                    <div class="table-data">5</div>
-                </div>
-                <div class="table-row">
-                    <div class="table-data">Dick</div>
-                    <div class="table-data">1</div>
-                    <div class="table-data">1</div>
-                    <div class="table-data">2</div>
-                    <div class="table-data">3</div>
-                </div>
-                <div class="table-row">
-                    <div class="table-data">Harry</div>
-                    <div class="table-data">0</div>
-                    <div class="table-data">2</div>
-                    <div class="table-data">2</div>
-                    <div class="table-data">2</div>
-                </div>
-            </div>    
+        <div class="header">
+            <h1>京東快遞</h1>
+            <p>智能報價及運單申請表</p>
         </div>
+
+        <form id="orderForm" class="form-container">
+            
+            <!-- 區塊 1：派送方式 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">1</span>
+                    選擇派送方式
+                </h2>
+                <div class="delivery-options">
+                    <label class="payment-label">
+                        <input type="radio" name="deliveryMethod" value="d2d" checked> 門到門
+                    </label>
+                    <label class="payment-label">
+                        <input type="radio" name="deliveryMethod" value="d2s"> 門到店 / 店到門
+                    </label>
+                    <label class="payment-label">
+                        <input type="radio" name="deliveryMethod" value="s2s"> 店到店
+                    </label>
+                </div>
+                <small style="color: var(--text-secondary); display: block; margin-top: 10px;">
+                    * 註：若選擇「京東特快」，系統將自動以門到門費率計算。
+                </small>
+            </div>
+
+            <!-- 區塊 2：選擇寄件項目 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">2</span>
+                    選擇寄件項目與重量 (單選)
+                </h2>
+                <div class="products-grid" id="productsGrid">
+                    <!-- JS 動態生成 -->
+                </div>
+            </div>
+
+            <!-- 區塊 3：訂單摘要 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">3</span>
+                    運費摘要
+                </h2>
+                <div class="order-summary" id="orderSummary">
+                    <div class="summary-row">
+                        <span>未選擇任何項目</span>
+                        <span>$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 區塊 4：寄件人資料 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">4</span>
+                    寄件人資料 (Sender)
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="senderName">寄件人名稱</label>
+                        <input type="text" id="senderName" class="form-input" required placeholder="請輸入寄件人姓名或公司名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="senderPhone">聯絡電話 (最多12位數字)</label>
+                        <input type="tel" id="senderPhone" class="form-input" required 
+                               placeholder="請輸入聯絡電話 (僅限數字)" 
+                               maxlength="12" inputmode="numeric"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="senderAddress">寄件地址</label>
+                    <input type="text" id="senderAddress" class="form-input" required placeholder="請輸入完整寄件地址">
+                </div>
+            </div>
+
+            <!-- 區塊 5：收件人資料 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">5</span>
+                    收件人資料 (Recipient)
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="recipientName">收件人名稱</label>
+                        <input type="text" id="recipientName" class="form-input" required placeholder="請輸入收件人姓名或公司名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="recipientPhone">聯絡電話 (最多12位數字)</label>
+                        <input type="tel" id="recipientPhone" class="form-input" required 
+                               placeholder="請輸入聯絡電話 (僅限數字)" 
+                               maxlength="12" inputmode="numeric"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="recipientAddress">到貨地址</label>
+                    <input type="text" id="recipientAddress" class="form-input" required placeholder="請輸入完整收件地址">
+                </div>
+            </div>
+
+            <!-- 區塊 6：付款方式 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">6</span>
+                    繳款方法 (Payment Method)
+                </h2>
+                <div class="form-group">
+                    <div class="payment-options">
+                        <label class="payment-label">
+                            <input type="radio" name="paymentMethod" value="寄件人支付 (寄付)" checked>
+                            寄件人支付 (寄付)
+                        </label>
+                        <label class="payment-label">
+                            <input type="radio" name="paymentMethod" value="收件人支付 (到付)">
+                            收件人支付 (到付)
+                        </label>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="submit-btn">📲 透過 WhatsApp 發送申請</button>
+            </div>
+        </form>
     </div>
 
-    <!-- 載入 jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- JS 排序邏輯 -->
+    <div class="floating-total" id="floatingTotal">
+        <div class="floating-total-label">預估總額</div>
+        <div class="floating-total-amount">$0.00</div>
+    </div>
+
     <script>
-        var properties = [\'name\', \'wins\', \'draws\', \'losses\', \'total\'];
+        const products = [
+            { id: 'doc', name: '文件', description: '適用於各類商業文件、信函寄遞。' },
+            { id: 'nondoc', name: '文件及非文件 (包裹)', description: '適用於一般包裹、樣品及重貨 (支援 20kg 以上智能計費)。' }
+        ];
 
-        $.each(properties, function (i, val) {
-            var sortOrder = 1;
-            
-            $("#" + val).click(function (e) {
-                e.preventDefault();
-                
-                var asc = sortOrder;
-                var th($(this));
-                
-                // 切換排序圖示狀態
-                $(".filter__link").removeClass("asc desc");
-                if (asc == 1) {
-                    $(this).addClass("asc");
-                    sortOrder = -1;
-                } else {
-                    $(this).addClass("desc");
-                    sortOrder = 1;
-                }
+        let selectedProducts = new Map();
 
-                // 排序表格行
-                var rows = $(".table-content .table-row").get();
+        // 核心計價與折扣計算引擎
+        function calculatePrice(id, weight, serviceType, deliveryMethod) {
+            if (serviceType === 'express') {
+                deliveryMethod = 'd2d'; 
+            }
 
-                rows.sort(function (a, b) {
-                    var A = $(a).children(".table-data").eq(i).text().toUpperCase();
-                    var B = $(b).children(".table-data").eq(i).text().toUpperCase();
-
-                    // 如果是數字，轉換成數字再比較
-                    if ($.isNumeric(A) && $.isNumeric(B)) {
-                        return asc * (A - B);
+            // 文件邏輯 (<=0.5kg)
+            if (id === 'doc') {
+                if (weight <= 0.5) {
+                    if (serviceType === 'express') {
+                        return { finalPrice: 26, originalPrice: 33, hasDiscount: true };
+                    } else {
+                        if (deliveryMethod === 's2s') {
+                            return { finalPrice: 14, originalPrice: 14, hasDiscount: false };
+                        } else {
+                            return { finalPrice: 14, originalPrice: 17, hasDiscount: true };
+                        }
                     }
+                }
+                id = 'nondoc';
+            }
 
-                    // 文字排序
-                    if (A < B) return -asc * 1;
-                    if (A > B) return asc * 1;
-                    return 0;
-                });
+            let tier = weight;
+            if (weight <= 5) {
+                tier = Math.ceil(weight * 2) / 2;
+            } else if (weight <= 20) {
+                tier = Math.ceil(weight);
+            }
 
-                $.each(rows, function (index, row) {
-                    $(".table-content").append(row);
+            if (tier < 1.0 && id === 'nondoc') tier = 1.0; 
+
+            // 超過 20kg 續重
+            if (weight > 20) {
+                let extraWeight = Math.ceil(weight - 20);
+                if (serviceType === 'standard') {
+                    const base = deliveryMethod === 'd2d' ? 258 : (deliveryMethod === 'd2s' ? 253 : 248);
+                    const p = base + (extraWeight * 13);
+                    return { finalPrice: p, originalPrice: p, hasDiscount: false };
+                } else {
+                    const p = 309 + (extraWeight * 12);
+                    return { finalPrice: p, originalPrice: p, hasDiscount: false };
+                }
+            }
+
+            // 1.0kg 到 20.0kg 的詳細原價與折後價對照表 [原價, 折後價]
+            const pricingTable = {
+                1.0: { standard: { d2d: [27, 22], d2s: [22, 18], s2s: [14, 14] }, express: [33, 26] },
+                1.5: { standard: { d2d: [34, 27], d2s: [29, 23], s2s: [14, 14] }, express: [41, 33] },
+                2.0: { standard: { d2d: [40, 32], d2s: [35, 28], s2s: [14, 14] }, express: [48, 38] },
+                2.5: { standard: { d2d: [47, 38], d2s: [42, 34], s2s: [24, 24] }, express: [56, 45] },
+                3.0: { standard: { d2d: [53, 42], d2s: [48, 38], s2s: [24, 24] }, express: [63, 50] },
+                3.5: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [71, 71] },
+                4.0: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [78, 78] },
+                4.5: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [86, 86] },
+                5.0: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [95, 95] },
+                6.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [109, 109] },
+                7.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [123, 123] },
+                8.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [138, 138] },
+                9.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [152, 152] },
+                10.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [166, 166] },
+                11.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [180, 180] },
+                12.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [195, 195] },
+                13.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [209, 209] },
+                14.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [223, 223] },
+                15.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [238, 238] },
+                16.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [252, 252] },
+                17.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [266, 266] },
+                18.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [281, 281] },
+                19.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [295, 295] },
+                20.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [309, 309] }
+            };
+
+            const data = serviceType === 'express' ? pricingTable[tier].express : pricingTable[tier].standard[deliveryMethod];
+            const originalPrice = data[0];
+            const finalPrice = data[1];
+
+            return {
+                finalPrice: finalPrice,
+                originalPrice: originalPrice,
+                hasDiscount: originalPrice > finalPrice
+            };
+        }
+
+        function initializeForm() {
+            renderProducts();
+            setupEventListeners();
+            updateAllPrices(); 
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.dataset.productId = product.id;
+
+                const defaultWeight = product.id === 'doc' ? 0.5 : 1.0;
+
+                productCard.innerHTML = `
+                    <div>
+                        <div class="product-header">
+                            <div class="product-checkbox"></div>
+                            <div class="product-info">
+                                <h3>${product.name}</h3>
+                                <div class="product-price-container" id="price-container-${product.id}">
+                                    <span class="product-price">$0.00</span>
+                                </div>
+                                <span class="price-note">此為該重量總價</span>
+                            </div>
+                        </div>
+                        <div class="product-description">${product.description}</div>
+                        
+                        <div class="service-type-toggle">
+                            <button type="button" class="service-btn active" data-type="standard">京東標快</button>
+                            <button type="button" class="service-btn" data-type="express">京東特快</button>
+                        </div>
+                    </div>
+
+                    <div class="quantity-controls">
+                        <span class="quantity-label">總重量：</span>
+                        <div class="quantity-input-wrapper">
+                            <input type="number" class="quantity-input" min="0.1" max="100" step="0.1" value="${defaultWeight}">
+                            <span class="unit-badge">KG</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(productCard);
+            });
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
+                radio.addEventListener('change', updateAllPrices);
+            });
+
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.service-type-toggle') || e.target.classList.contains('quantity-input')) return;
+                    toggleProductSelection(card.dataset.productId);
                 });
             });
-        });
+
+            document.querySelectorAll('.service-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const card = btn.closest('.product-card');
+                    card.querySelectorAll('.service-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateAllPrices(); 
+                });
+            });
+
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('input', () => {
+                    updateAllPrices();
+                });
+            });
+
+            document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
+            window.addEventListener('scroll', handleScroll);
+        }
+
+        // 單選邏輯
+        function toggleProductSelection(productId) {
+            const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+            const checkbox = card.querySelector('.product-checkbox');
+            
+            if (selectedProducts.has(productId)) {
+                selectedProducts.delete(productId);
+                checkbox.classList.remove('checked');
+                checkbox.textContent = '';
+                card.classList.remove('selected');
+            } else {
+                selectedProducts.clear();
+                document.querySelectorAll('.product-card').forEach(c => {
+                    c.classList.remove('selected');
+                    const cb = c.querySelector('.product-checkbox');
+                    if (cb) {
+                        cb.classList.remove('checked');
+                        cb.textContent = '';
+                    }
+                });
+
+                const product = products.find(p => p.id === productId);
+                selectedProducts.set(productId, { id: productId, name: product.name });
+                checkbox.classList.add('checked');
+                checkbox.textContent = '✓';
+                card.classList.add('selected');
+            }
+            updateAllPrices();
+        }
+
+        function updateAllPrices() {
+            const deliveryMethod = document.querySelector('input[name="deliveryMethod"]:checked').value;
+            
+            document.querySelectorAll('.product-card').forEach(card => {
+                const productId = card.dataset.productId;
+                const weightInput = card.querySelector('.quantity-input');
+                let weight = parseFloat(weightInput.value) || 0.1;
+                
+                const activeServiceBtn = card.querySelector('.service-btn.active');
+                const serviceType = activeServiceBtn.dataset.type;
+
+                const priceResult = calculatePrice(productId, weight, serviceType, deliveryMethod);
+                const priceContainer = card.querySelector('.product-price-container');
+
+                if (priceResult.hasDiscount) {
+                    priceContainer.innerHTML = `
+                        <span class="original-price">$${priceResult.originalPrice.toFixed(2)}</span>
+                        <span class="product-price">$${priceResult.finalPrice.toFixed(2)}</span>
+                        <span class="discount-badge">🔥 享 8 折優惠</span>
+                    `;
+                } else {
+                    priceContainer.innerHTML = `
+                        <span class="product-price">$${priceResult.finalPrice.toFixed(2)}</span>
+                    `;
+                }
+
+                if (selectedProducts.has(productId)) {
+                    const item = selectedProducts.get(productId);
+                    item.serviceType = serviceType;
+                    item.quantity = weight;
+                    item.activePrice = priceResult.finalPrice;
+                    item.originalPrice = priceResult.originalPrice;
+                    item.hasDiscount = priceResult.hasDiscount;
+                }
+            });
+            updateOrderSummary();
+        }
+
+        function updateOrderSummary() {
+            const summaryContainer = document.getElementById('orderSummary');
+            const floatingTotal = document.getElementById('floatingTotal');
+            const globalMethodStr = document.querySelector('input[name="deliveryMethod"]:checked').parentNode.textContent.trim();
+
+            if (selectedProducts.size === 0) {
+                summaryContainer.innerHTML = `<div class="summary-row"><span>未選擇任何項目</span><span>$0.00</span></div>`;
+                floatingTotal.classList.remove('visible');
+                return;
+            }
+
+            let total = 0;
+            let summaryHTML = '';
+
+            selectedProducts.forEach(item => {
+                total += item.activePrice;
+                
+                const serviceLabel = item.serviceType === 'express' ? '京東特快' : '京東標快';
+                const methodStr = item.serviceType === 'express' ? '門到門(特快規定)' : globalMethodStr;
+
+                const discountText = item.hasDiscount ? 
+                    `<span style="color:var(--accent-red); font-weight:600; font-size:0.8rem; margin-left:6px;">[原價 <del>$${item.originalPrice.toFixed(2)}</del> - 享 8 折優惠]</span>` : '';
+
+                summaryHTML += `
+                    <div class="summary-row">
+                        <span style="flex:1;">
+                            <strong>${item.name}</strong> ${discountText}<br>
+                            <small style="color:var(--text-secondary);">
+                                ${serviceLabel} | ${methodStr} | 重量: ${item.quantity}kg
+                            </small>
+                        </span>
+                        <span style="font-family:monospace; font-size: 1.1rem; color: var(--text-primary); text-align:right;">
+                            $${item.activePrice.toFixed(2)}
+                        </span>
+                    </div>
+                `;
+            });
+
+            summaryHTML += `
+                <div class="summary-row">
+                    <span>總計 (Total)</span>
+                    <span style="font-family:monospace; color:var(--accent-green); font-size: 1.4rem;">$${total.toFixed(2)}</span>
+                </div>
+            `;
+
+            summaryContainer.innerHTML = summaryHTML;
+            floatingTotal.querySelector('.floating-total-amount').textContent = `$${total.toFixed(2)}`;
+            floatingTotal.classList.add('visible');
+        }
+
+        function handleScroll() {
+            const summary = document.getElementById('orderSummary');
+            const floatingTotal = document.getElementById('floatingTotal');
+            if (!summary || selectedProducts.size === 0) return;
+
+            const rect = summary.getBoundingClientRect();
+            const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+            
+            if (isVisible) floatingTotal.classList.remove('visible');
+            else floatingTotal.classList.add('visible');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            if (selectedProducts.size === 0) {
+                alert('請至少勾選一個寄件項目！');
+                return;
+            }
+
+            const globalMethodStr = document.querySelector('input[name="deliveryMethod"]:checked').parentNode.textContent.trim();
+            let orderDetails = "📦 *【京東快遞 - 新運單申請】*\n\n";
+            let total = 0;
+
+            orderDetails += "*--- 寄件項目 ---*\n";
+            selectedProducts.forEach(item => {
+                total += item.activePrice;
+                const serviceLabel = item.serviceType === 'express' ? '京東特快' : '京東標快';
+                const methodStr = item.serviceType === 'express' ? '門到門' : globalMethodStr;
+                const discountNote = item.hasDiscount ? ` (原價 $${item.originalPrice.toFixed(2)}，已享 8 折優惠)` : '';
+
+                orderDetails += `• 類型: ${item.name}\n`;
+                orderDetails += `  服務: ${serviceLabel}\n`;
+                orderDetails += `  方式: ${methodStr}\n`;
+                orderDetails += `  重量: ${item.quantity}kg\n`;
+                orderDetails += `  小計: $${item.activePrice.toFixed(2)}${discountNote}\n\n`;
+            });
+            orderDetails += `*預估總金額: $${total.toFixed(2)}*\n\n`;
+
+            const senderName = document.getElementById('senderName').value;
+            const senderPhone = document.getElementById('senderPhone').value;
+            const senderAddress = document.getElementById('senderAddress').value;
+
+            const recipientName = document.getElementById('recipientName').value;
+            const recipientPhone = document.getElementById('recipientPhone').value;
+            const recipientAddress = document.getElementById('recipientAddress').value;
+
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            orderDetails += "*--- 寄件人資料 ---*\n";
+            orderDetails += `👤 名稱: ${senderName}\n`;
+            orderDetails += `📞 電話: ${senderPhone}\n`;
+            orderDetails += `📍 地址: ${senderAddress}\n\n`;
+
+            orderDetails += "*--- 收件人資料 ---*\n";
+            orderDetails += `👤 名稱: ${recipientName}\n`;
+            orderDetails += `📞 電話: ${recipientPhone}\n`;
+            orderDetails += `📍 地址: ${recipientAddress}\n\n`;
+
+            orderDetails += "*--- 繳款方法 ---*\n";
+            orderDetails += `💳 選擇: ${paymentMethod}`;
+
+            const myWhatsAppNumber = "85298884497"; 
+
+            const encodedMessage = encodeURIComponent(orderDetails);
+            const whatsappURL = `https://wa.me/${myWhatsAppNumber}?text=${encodedMessage}`;
+
+            window.open(whatsappURL, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeForm);
     </script>
 </body>
 </html>
