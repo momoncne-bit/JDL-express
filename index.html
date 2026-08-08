@@ -188,13 +188,6 @@
             gap: 0.5rem;
         }
 
-        .original-price {
-            text-decoration: line-through;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: normal;
-        }
-
         .product-price {
             font-family: monospace;
             font-size: 1.4rem;
@@ -202,15 +195,10 @@
             color: var(--accent-green);
         }
 
-        .discount-badge {
-            background: #fee2e2;
-            color: var(--accent-red);
-            font-size: 0.75rem;
+        .price-error {
+            font-size: 0.95rem;
             font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 12px;
-            border: 1px solid #fca5a5;
-            display: inline-block;
+            color: #ef4444;
         }
         
         .price-note {
@@ -239,7 +227,7 @@
         .service-btn {
             flex: 1;
             padding: 0.5rem 0.2rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             border: none;
             background: transparent;
@@ -256,7 +244,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
-        /* 💥 重量選擇區塊（紅調突出版） 💥 */
+        /* 重量選擇區塊 */
         .quantity-controls {
             display: flex;
             align-items: center;
@@ -274,8 +262,8 @@
         .product-card.selected .quantity-controls {
             opacity: 1;
             pointer-events: auto;
-            background: #fef2f2; /* 溫暖柔和紅底色 */
-            border: 2px solid var(--accent-red); /* 紅色實線邊框 */
+            background: #fef2f2;
+            border: 2px solid var(--accent-red);
             box-shadow: 0 4px 12px rgba(192, 0, 0, 0.12);
         }
 
@@ -471,7 +459,7 @@
                     </label>
                 </div>
                 <small style="color: var(--text-secondary); display: block; margin-top: 10px;">
-                    * 註：若選擇「京東特快」，系統將自動以門到門費率計算。
+                    * 註：「京東特快」僅提供門到門服務；「京快重貨」適合大宗貨件。
                 </small>
             </div>
 
@@ -484,6 +472,9 @@
                 <div class="products-grid" id="productsGrid">
                     <!-- JS 動態生成 -->
                 </div>
+                <small style="color: var(--text-secondary); display: block; margin-top: 12px;">
+                    💡 提示：本表顯示為標準官方運費。送出申請後，專員於後台建立運單時可為您申請 **9 折優惠**！
+                </small>
             </div>
 
             <!-- 區塊 3：訂單摘要 -->
@@ -570,7 +561,6 @@
                 </div>
                 <br>
                 <button type="submit" class="submit-btn">📲 透過 WhatsApp 發送申請</button>
-                <br><br><br><br>
             </div>
         </form>
     </div>
@@ -582,93 +572,101 @@
 
     <script>
         const products = [
-            { id: 'doc', name: '文件', description: '適用於各類商業文件、信函寄遞。' },
-            { id: 'nondoc', name: '文件及非文件 (包裹)', description: '適用於一般包裹、樣品及重貨 (支援 20kg 以上智能計費)。' }
+            { id: 'doc', name: '文件', description: '適用於各類商業文件、信函寄遞 (0.5kg 以內)。' },
+            { id: 'nondoc', name: '文件及非文件 (包裹)', description: '適用於一般包裹、樣品及 20kg 以上大宗重貨。' }
         ];
 
         let selectedProducts = new Map();
 
-        // 核心計價與折扣計算引擎
+        // 最新運費價格計算引擎
         function calculatePrice(id, weight, serviceType, deliveryMethod) {
             if (serviceType === 'express') {
                 deliveryMethod = 'd2d'; 
             }
 
-            // 文件邏輯 (<=0.5kg)
-            if (id === 'doc') {
-                if (weight <= 0.5) {
-                    if (serviceType === 'express') {
-                        return { finalPrice: 26, originalPrice: 33, hasDiscount: true };
-                    } else {
-                        if (deliveryMethod === 's2s') {
-                            return { finalPrice: 14, originalPrice: 14, hasDiscount: false };
-                        } else {
-                            return { finalPrice: 14, originalPrice: 17, hasDiscount: true };
-                        }
-                    }
+            // 1. 文件特別規格 (<=0.5kg)
+            if (id === 'doc' && weight <= 0.5) {
+                if (serviceType === 'heavy') {
+                    return { finalPrice: null, error: '京快重貨不設文件項目' };
                 }
-                id = 'nondoc';
+                if (serviceType === 'express') {
+                    return { finalPrice: 33 };
+                } else { // standard
+                    if (deliveryMethod === 's2s') {
+                        return { finalPrice: 14 };
+                    }
+                    return { finalPrice: 17 }; // d2d / d2s
+                }
             }
 
+            // 2. 超過 20kg 大宗重貨邏輯
+            if (weight > 20) {
+                if (serviceType === 'express') {
+                    return { finalPrice: null, error: '京東特快不設 20kg 以上項目' };
+                }
+                if (serviceType === 'standard') {
+                    let extraWeight = Math.ceil(weight - 20);
+                    let base = deliveryMethod === 'd2d' ? 258 : (deliveryMethod === 'd2s' ? 253 : 248);
+                    return { finalPrice: base + (extraWeight * 13) };
+                }
+                if (serviceType === 'heavy') {
+                    if (weight <= 39) return { finalPrice: 155 };
+                    if (weight <= 59) return { finalPrice: 184 };
+                    if (weight <= 79) return { finalPrice: 230 };
+                    if (weight <= 300) return { finalPrice: 276 };
+                    // 300kg 以上
+                    let extraWeight = Math.ceil(weight - 300);
+                    return { finalPrice: 276 + (extraWeight * 0.7) };
+                }
+            }
+
+            // 3. 常規 1.0kg - 20.0kg 重量級距計算
             let tier = weight;
             if (weight <= 5) {
                 tier = Math.ceil(weight * 2) / 2;
+                if (tier < 1.0) tier = 1.0;
             } else if (weight <= 20) {
                 tier = Math.ceil(weight);
             }
 
-            if (tier < 1.0 && id === 'nondoc') tier = 1.0; 
-
-            // 超過 20kg 續重
-            if (weight > 20) {
-                let extraWeight = Math.ceil(weight - 20);
-                if (serviceType === 'standard') {
-                    const base = deliveryMethod === 'd2d' ? 258 : (deliveryMethod === 'd2s' ? 253 : 248);
-                    const p = base + (extraWeight * 13);
-                    return { finalPrice: p, originalPrice: p, hasDiscount: false };
-                } else {
-                    const p = 309 + (extraWeight * 12);
-                    return { finalPrice: p, originalPrice: p, hasDiscount: false };
-                }
-            }
-
-            // 1.0kg 到 20.0kg 的詳細原價與折後價對照表 [原價, 折後價]
+            // 1.0kg 到 20.0kg 的原價表
             const pricingTable = {
-                1.0: { standard: { d2d: [27, 22], d2s: [22, 18], s2s: [14, 14] }, express: [33, 26] },
-                1.5: { standard: { d2d: [34, 27], d2s: [29, 23], s2s: [14, 14] }, express: [41, 33] },
-                2.0: { standard: { d2d: [40, 32], d2s: [35, 28], s2s: [14, 14] }, express: [48, 38] },
-                2.5: { standard: { d2d: [47, 38], d2s: [42, 34], s2s: [24, 24] }, express: [56, 45] },
-                3.0: { standard: { d2d: [53, 42], d2s: [48, 38], s2s: [24, 24] }, express: [63, 50] },
-                3.5: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [71, 71] },
-                4.0: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [78, 78] },
-                4.5: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [86, 86] },
-                5.0: { standard: { d2d: [53, 53], d2s: [48, 48], s2s: [24, 24] }, express: [95, 95] },
-                6.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [109, 109] },
-                7.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [123, 123] },
-                8.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [138, 138] },
-                9.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [152, 152] },
-                10.0: { standard: { d2d: [62, 62], d2s: [57, 57], s2s: [34, 34] }, express: [166, 166] },
-                11.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [180, 180] },
-                12.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [195, 195] },
-                13.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [209, 209] },
-                14.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [223, 223] },
-                15.0: { standard: { d2d: [71, 71], d2s: [66, 66], s2s: [61, 61] }, express: [238, 238] },
-                16.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [252, 252] },
-                17.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [266, 266] },
-                18.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [281, 281] },
-                19.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [295, 295] },
-                20.0: { standard: { d2d: [80, 80], d2s: [75, 75], s2s: [70, 70] }, express: [309, 309] }
+                1.0: { standard: { d2d: 27, d2s: 22, s2s: 14 }, express: 33, heavy: 27 },
+                1.5: { standard: { d2d: 34, d2s: 29, s2s: 14 }, express: 41, heavy: 34 },
+                2.0: { standard: { d2d: 40, d2s: 35, s2s: 14 }, express: 48, heavy: 40 },
+                2.5: { standard: { d2d: 47, d2s: 42, s2s: 24 }, express: 56, heavy: 47 },
+                3.0: { standard: { d2d: 53, d2s: 48, s2s: 24 }, express: 63, heavy: 53 },
+                3.5: { standard: { d2d: 53, d2s: 48, s2s: 24 }, express: 71, heavy: 60 },
+                4.0: { standard: { d2d: 53, d2s: 48, s2s: 24 }, express: 78, heavy: 66 },
+                4.5: { standard: { d2d: 53, d2s: 48, s2s: 24 }, express: 86, heavy: 73 },
+                5.0: { standard: { d2d: 53, d2s: 48, s2s: 34 }, express: 95, heavy: 78 },
+                6.0: { standard: { d2d: 62, d2s: 57, s2s: 34 }, express: 109, heavy: 81 },
+                7.0: { standard: { d2d: 62, d2s: 57, s2s: 34 }, express: 123, heavy: 81 },
+                8.0: { standard: { d2d: 62, d2s: 57, s2s: 34 }, express: 138, heavy: 81 },
+                9.0: { standard: { d2d: 62, d2s: 57, s2s: 34 }, express: 152, heavy: 81 },
+                10.0: { standard: { d2d: 62, d2s: 57, s2s: 61 }, express: 166, heavy: 81 },
+                11.0: { standard: { d2d: 71, d2s: 66, s2s: 61 }, express: 180, heavy: 118 },
+                12.0: { standard: { d2d: 71, d2s: 66, s2s: 61 }, express: 195, heavy: 118 },
+                13.0: { standard: { d2d: 71, d2s: 66, s2s: 61 }, express: 209, heavy: 118 },
+                14.0: { standard: { d2d: 71, d2s: 66, s2s: 61 }, express: 223, heavy: 118 },
+                15.0: { standard: { d2d: 71, d2s: 66, s2s: 61 }, express: 252, heavy: 118 },
+                16.0: { standard: { d2d: 80, d2s: 75, s2s: 70 }, express: 252, heavy: 127 },
+                17.0: { standard: { d2d: 80, d2s: 75, s2s: 70 }, express: 266, heavy: 127 },
+                18.0: { standard: { d2d: 80, d2s: 75, s2s: 70 }, express: 281, heavy: 127 },
+                19.0: { standard: { d2d: 80, d2s: 75, s2s: 70 }, express: 295, heavy: 127 },
+                20.0: { standard: { d2d: 80, d2s: 75, s2s: 70 }, express: 309, heavy: 127 }
             };
 
-            const data = serviceType === 'express' ? pricingTable[tier].express : pricingTable[tier].standard[deliveryMethod];
-            const originalPrice = data[0];
-            const finalPrice = data[1];
+            const data = pricingTable[tier];
+            if (!data) return { finalPrice: null, error: '無效重量' };
 
-            return {
-                finalPrice: finalPrice,
-                originalPrice: originalPrice,
-                hasDiscount: originalPrice > finalPrice
-            };
+            if (serviceType === 'express') {
+                return { finalPrice: data.express };
+            } else if (serviceType === 'heavy') {
+                return { finalPrice: data.heavy };
+            } else {
+                return { finalPrice: data.standard[deliveryMethod] };
+            }
         }
 
         function initializeForm() {
@@ -697,7 +695,7 @@
                                 <div class="product-price-container" id="price-container-${product.id}">
                                     <span class="product-price">$0.00</span>
                                 </div>
-                                <span class="price-note">此為該重量總價</span>
+                                <span class="price-note">此為該重量標準總價</span>
                             </div>
                         </div>
                         <div class="product-description">${product.description}</div>
@@ -705,13 +703,14 @@
                         <div class="service-type-toggle">
                             <button type="button" class="service-btn active" data-type="standard">京東標快</button>
                             <button type="button" class="service-btn" data-type="express">京東特快</button>
+                            <button type="button" class="service-btn" data-type="heavy">京快重貨</button>
                         </div>
                     </div>
 
                     <div class="quantity-controls">
                         <span class="quantity-label">總重量：</span>
                         <div class="quantity-input-wrapper">
-                            <input type="number" class="quantity-input" min="0.1" max="100" step="0.1" value="${defaultWeight}">
+                            <input type="number" class="quantity-input" min="0.1" max="1000" step="0.1" value="${defaultWeight}">
                             <span class="unit-badge">KG</span>
                         </div>
                     </div>
@@ -752,7 +751,6 @@
             window.addEventListener('scroll', handleScroll);
         }
 
-        // 單選邏輯
         function toggleProductSelection(productId) {
             const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
             const checkbox = card.querySelector('.product-checkbox');
@@ -796,16 +794,10 @@
                 const priceResult = calculatePrice(productId, weight, serviceType, deliveryMethod);
                 const priceContainer = card.querySelector('.product-price-container');
 
-                if (priceResult.hasDiscount) {
-                    priceContainer.innerHTML = `
-                        <span class="original-price">$${priceResult.originalPrice.toFixed(2)}</span>
-                        <span class="product-price">$${priceResult.finalPrice.toFixed(2)}</span>
-                        <span class="discount-badge">🔥 享 8 折優惠</span>
-                    `;
+                if (priceResult.finalPrice === null) {
+                    priceContainer.innerHTML = `<span class="price-error">⚠️ ${priceResult.error}</span>`;
                 } else {
-                    priceContainer.innerHTML = `
-                        <span class="product-price">$${priceResult.finalPrice.toFixed(2)}</span>
-                    `;
+                    priceContainer.innerHTML = `<span class="product-price">$${priceResult.finalPrice.toFixed(2)}</span>`;
                 }
 
                 if (selectedProducts.has(productId)) {
@@ -813,8 +805,7 @@
                     item.serviceType = serviceType;
                     item.quantity = weight;
                     item.activePrice = priceResult.finalPrice;
-                    item.originalPrice = priceResult.originalPrice;
-                    item.hasDiscount = priceResult.hasDiscount;
+                    item.error = priceResult.error;
                 }
             });
             updateOrderSummary();
@@ -833,20 +824,32 @@
 
             let total = 0;
             let summaryHTML = '';
+            let hasError = false;
 
             selectedProducts.forEach(item => {
+                if (item.activePrice === null) {
+                    hasError = true;
+                    summaryHTML += `
+                        <div class="summary-row">
+                            <span style="flex:1;"><strong>${item.name}</strong><br><small style="color:#ef4444;">${item.error}</small></span>
+                            <span style="color:#ef4444; font-weight:bold;">無法計算</span>
+                        </div>
+                    `;
+                    return;
+                }
+
                 total += item.activePrice;
                 
-                const serviceLabel = item.serviceType === 'express' ? '京東特快' : '京東標快';
-                const methodStr = item.serviceType === 'express' ? '門到門(特快規定)' : globalMethodStr;
+                let serviceLabel = '京東標快';
+                if (item.serviceType === 'express') serviceLabel = '京東特快';
+                if (item.serviceType === 'heavy') serviceLabel = '京快重貨';
 
-                const discountText = item.hasDiscount ? 
-                    `<span style="color:var(--accent-red); font-weight:600; font-size:0.8rem; margin-left:6px;">[原價 <del>$${item.originalPrice.toFixed(2)}</del> - 享 8 折優惠]</span>` : '';
+                const methodStr = item.serviceType === 'express' ? '門到門' : globalMethodStr;
 
                 summaryHTML += `
                     <div class="summary-row">
                         <span style="flex:1;">
-                            <strong>${item.name}</strong> ${discountText}<br>
+                            <strong>${item.name}</strong><br>
                             <small style="color:var(--text-secondary);">
                                 ${serviceLabel} | ${methodStr} | 重量: ${item.quantity}kg
                             </small>
@@ -858,16 +861,20 @@
                 `;
             });
 
-            summaryHTML += `
-                <div class="summary-row">
-                    <span>總計 (Total)</span>
-                    <span style="font-family:monospace; color:var(--accent-green); font-size: 1.4rem;">$${total.toFixed(2)}</span>
-                </div>
-            `;
+            if (!hasError) {
+                summaryHTML += `
+                    <div class="summary-row">
+                        <span>總計 (Total)</span>
+                        <span style="font-family:monospace; color:var(--accent-green); font-size: 1.4rem;">$${total.toFixed(2)}</span>
+                    </div>
+                `;
+                floatingTotal.querySelector('.floating-total-amount').textContent = `$${total.toFixed(2)}`;
+                floatingTotal.classList.add('visible');
+            } else {
+                floatingTotal.classList.remove('visible');
+            }
 
             summaryContainer.innerHTML = summaryHTML;
-            floatingTotal.querySelector('.floating-total-amount').textContent = `$${total.toFixed(2)}`;
-            floatingTotal.classList.add('visible');
         }
 
         function handleScroll() {
@@ -890,24 +897,38 @@
                 return;
             }
 
+            let total = 0;
+            let containsError = false;
+
+            selectedProducts.forEach(item => {
+                if (item.activePrice === null) containsError = true;
+                else total += item.activePrice;
+            });
+
+            if (containsError) {
+                alert('選擇的寄件服務與重量有誤，請先更正後再送出！');
+                return;
+            }
+
             const globalMethodStr = document.querySelector('input[name="deliveryMethod"]:checked').parentNode.textContent.trim();
             let orderDetails = "📦 *【京東快遞 - 新運單申請】*\n\n";
-            let total = 0;
 
             orderDetails += "*--- 寄件項目 ---*\n";
             selectedProducts.forEach(item => {
-                total += item.activePrice;
-                const serviceLabel = item.serviceType === 'express' ? '京東特快' : '京東標快';
+                let serviceLabel = '京東標快';
+                if (item.serviceType === 'express') serviceLabel = '京東特快';
+                if (item.serviceType === 'heavy') serviceLabel = '京快重貨';
+
                 const methodStr = item.serviceType === 'express' ? '門到門' : globalMethodStr;
-                const discountNote = item.hasDiscount ? ` (原價 $${item.originalPrice.toFixed(2)}，已享 8 折優惠)` : '';
 
                 orderDetails += `• 類型: ${item.name}\n`;
                 orderDetails += `  服務: ${serviceLabel}\n`;
                 orderDetails += `  方式: ${methodStr}\n`;
                 orderDetails += `  重量: ${item.quantity}kg\n`;
-                orderDetails += `  小計: $${item.activePrice.toFixed(2)}${discountNote}\n\n`;
+                orderDetails += `  標準小計: $${item.activePrice.toFixed(2)}\n\n`;
             });
-            orderDetails += `*預估總金額: $${total.toFixed(2)}*\n\n`;
+            orderDetails += `*預估標準總金額: $${total.toFixed(2)}*\n`;
+            orderDetails += `_(專員建立運單時可為您申請 9 折優惠)_\n\n`;
 
             const senderName = document.getElementById('senderName').value;
             const senderPhone = document.getElementById('senderPhone').value;
