@@ -19,6 +19,8 @@
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
+            /* 統一選項字體大小 */
+            --option-font-size: 0.875rem; 
         }
 
         * {
@@ -106,46 +108,34 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        
-        /* 頂部全域服務類別切換 */
-        .global-service-toggle {
-            display: flex;
-            background: #f3f4f6;
-            border-radius: var(--radius-md);
-            padding: 6px;
-            margin-bottom: 1.25rem;
-            gap: 6px;
-            border: 1px solid var(--border-light);
-        }
 
-        .global-service-btn {
-            flex: 1;
-            padding: 0.75rem 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .global-service-btn.active {
-            background: #ffffff;
-            color: var(--accent-red);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-        }
-
+        /* 統一選擇區塊外框 */
         .delivery-options {
             display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+            gap: 1rem;
+            flex-wrap: nowrap;
             background: #f9fafb;
-            padding: 1rem;
+            padding: 0.85rem 1rem;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-light);
+            align-items: center;
+        }
+
+        .payment-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            font-size: var(--option-font-size);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .payment-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-red);
+            cursor: pointer;
         }
 
         .products-grid {
@@ -326,7 +316,6 @@
             font-family: inherit;
         }
 
-        /* 💥 多行文字地址框 (3行高度) 💥 */
         textarea.form-input {
             resize: vertical;
             line-height: 1.5;
@@ -342,20 +331,6 @@
             display: flex;
             gap: 2rem;
             margin-top: 0.5rem;
-        }
-
-        .payment-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .payment-label input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-red);
         }
 
         .submit-btn {
@@ -376,13 +351,13 @@
             box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
         }
 
-        /* 💥 整合版浮動運費摘要 💥 */
+        /* 浮動運費摘要面板 */
         .floating-total {
             position: fixed;
             bottom: 1.5rem;
             right: 1.5rem;
             background: rgba(255, 255, 255, 0.98);
-            padding: 1.25rem 1.5rem;
+            padding: 1rem 1.25rem;
             border-radius: var(--radius-lg);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
             border: 1px solid var(--border-light);
@@ -394,12 +369,12 @@
         }
 
         .floating-total-header {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             border-bottom: 1px solid var(--border-light);
-            padding-bottom: 0.4rem;
+            padding-bottom: 0.3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -414,24 +389,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.4rem 0;
+            padding: 0.3rem 0;
             font-size: 0.9rem;
         }
 
-        .summary-row:last-child {
-            font-weight: 800;
-            font-size: 1.15rem;
-            padding-top: 0.6rem;
-            margin-top: 0.4rem;
-            border-top: 2px solid var(--border-light);
-        }
-
         @media (max-width: 768px) {
+            :root {
+                --option-font-size: 0.78rem;
+            }
             .products-grid { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
             .payment-options { flex-direction: column; gap: 1rem; }
             .floating-total { bottom: 1rem; right: 1rem; left: 1rem; width: auto; }
-            .global-service-toggle { flex-direction: column; }
+            
+            .delivery-options {
+                padding: 0.75rem 0.5rem;
+                gap: 0.3rem;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
@@ -444,24 +419,27 @@
 
         <form id="orderForm" class="form-container">
             
-            <!-- 區塊 1：選擇派送方法及類別 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">1</span>
                     選擇派送方法及類別
                 </h2>
                 
-                <!-- 服務類別選單 (移至頂部) -->
                 <div class="form-group">
                     <label class="form-label">選擇服務類別：</label>
-                    <div class="global-service-toggle" id="globalServiceToggle">
-                        <button type="button" class="global-service-btn active" data-type="standard">京東標快 (T+1)</button>
-                        <button type="button" class="global-service-btn" data-type="express">京東特快 (4小時)</button>
-                        <button type="button" class="global-service-btn" data-type="heavy">京快重貨 (T+1)</button>
+                    <div class="delivery-options">
+                        <label class="payment-label">
+                            <input type="radio" name="serviceType" value="standard" checked> 京東標快 (T+1)
+                        </label>
+                        <label class="payment-label">
+                            <input type="radio" name="serviceType" value="express"> 京東特快 (4小時)
+                        </label>
+                        <label class="payment-label">
+                            <input type="radio" name="serviceType" value="heavy"> 京快重貨 (T+1)
+                        </label>
                     </div>
                 </div>
 
-                <!-- 派送模式 -->
                 <div class="form-group">
                     <label class="form-label">選擇派送模式：</label>
                     <div class="delivery-options">
@@ -481,21 +459,18 @@
                 </small>
             </div>
 
-            <!-- 區塊 2：選擇寄件項目 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">2</span>
                     選擇寄件項目與重量 (單選)
                 </h2>
                 <div class="products-grid" id="productsGrid">
-                    <!-- JS 動態生成 -->
-                </div>
+                    </div>
                 <small style="color: var(--text-secondary); display: block; margin-top: 12px;">
                     💡 提示：本表顯示為標準官方運費。送出申請後，專員於後台建立運單時可為您申請 **9 折優惠**！
                 </small>
             </div>
 
-            <!-- 區塊 3：寄件人資料 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">3</span>
@@ -514,14 +489,12 @@
                                oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                     </div>
                 </div>
-                <!-- 改為 3 行多行文字方格 -->
                 <div class="form-group">
                     <label class="form-label" for="senderAddress">寄件地址</label>
                     <textarea id="senderAddress" class="form-input" rows="3" required placeholder="請輸入完整寄件地址 (例如：區域、街道、大廈及室號)"></textarea>
                 </div>
             </div>
 
-            <!-- 區塊 4：收件人資料 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">4</span>
@@ -540,14 +513,12 @@
                                oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                     </div>
                 </div>
-                <!-- 改為 3 行多行文字方格 -->
                 <div class="form-group">
                     <label class="form-label" for="recipientAddress">到貨地址</label>
                     <textarea id="recipientAddress" class="form-input" rows="3" required placeholder="請輸入完整收件地址 (例如：區域、街道、大廈及室號)"></textarea>
                 </div>
             </div>
 
-            <!-- 區塊 5：付款方式 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">5</span>
@@ -571,7 +542,6 @@
         </form>
     </div>
 
-    <!-- 💥 運費摘要：直接融入浮動面板中 💥 -->
     <div class="floating-total" id="floatingTotal">
         <div class="floating-total-header">
             <span>📋 運費摘要</span>
@@ -580,11 +550,11 @@
         <div class="order-summary" id="orderSummary">
             <div class="summary-row">
                 <span>未選擇任何項目</span>
-                <span>$0.00</span>
+                <span style="font-family:monospace; color:var(--accent-green); font-weight:bold;">$0.00</span>
             </div>
         </div>
     </div>
-
+    <br><br><br><br>
     <script>
         const products = [
             { id: 'doc', name: '文件', description: '適用於各類商業文件、信函寄遞 (0.5kg 以內)。' },
@@ -728,13 +698,9 @@
         }
 
         function setupEventListeners() {
-            // 頂部全域服務類別切換
-            document.querySelectorAll('.global-service-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.global-service-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    updateAllPrices();
-                });
+            // 服務類別變更
+            document.querySelectorAll('input[name="serviceType"]').forEach(radio => {
+                radio.addEventListener('change', updateAllPrices);
             });
 
             // 派送模式變更
@@ -791,8 +757,7 @@
 
         function updateAllPrices() {
             const deliveryMethod = document.querySelector('input[name="deliveryMethod"]:checked').value;
-            const activeGlobalBtn = document.querySelector('.global-service-btn.active');
-            const serviceType = activeGlobalBtn.dataset.type;
+            const serviceType = document.querySelector('input[name="serviceType"]:checked').value;
             
             document.querySelectorAll('.product-card').forEach(card => {
                 const productId = card.dataset.productId;
@@ -827,19 +792,16 @@
                 summaryContainer.innerHTML = `
                     <div class="summary-row">
                         <span>未選擇任何項目</span>
-                        <span style="font-family:monospace; color:var(--accent-green); font-size: 1.2rem;">$0.00</span>
+                        <span style="font-family:monospace; color:var(--accent-green); font-weight:bold;">$0.00</span>
                     </div>
                 `;
                 return;
             }
 
-            let total = 0;
             let summaryHTML = '';
-            let hasError = false;
 
             selectedProducts.forEach(item => {
                 if (item.activePrice === null) {
-                    hasError = true;
                     summaryHTML += `
                         <div class="summary-row">
                             <span style="flex:1;"><strong>${item.name}</strong><br><small style="color:#ef4444;">${item.error}</small></span>
@@ -849,8 +811,6 @@
                     return;
                 }
 
-                total += item.activePrice;
-                
                 let serviceLabel = '京東標快';
                 if (item.serviceType === 'express') serviceLabel = '京東特快';
                 if (item.serviceType === 'heavy') serviceLabel = '京快重貨';
@@ -865,21 +825,12 @@
                                 ${serviceLabel} | ${methodStr} | 重量: ${item.quantity}kg
                             </small>
                         </span>
-                        <span style="font-family:monospace; font-size: 1.05rem; color: var(--text-primary); text-align:right;">
+                        <span style="font-family:monospace; font-size: 1.1rem; color: var(--accent-green); font-weight: bold; text-align:right;">
                             $${item.activePrice.toFixed(2)}
                         </span>
                     </div>
                 `;
             });
-
-            if (!hasError) {
-                summaryHTML += `
-                    <div class="summary-row">
-                        <span>預估總計 (Total)</span>
-                        <span style="font-family:monospace; color:var(--accent-green); font-size: 1.35rem;">$${total.toFixed(2)}</span>
-                    </div>
-                `;
-            }
 
             summaryContainer.innerHTML = summaryHTML;
         }
