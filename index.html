@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可排序的表格</title>
+    
+    <!-- CSS 樣式 -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        p {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border: 1px solid #eee;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            background-color: #333;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .header__item {
+            flex: 1;
+            padding: 12px 15px;
+        }
+
+        .filter__link {
+            color: #fff;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding-right: 15px;
+        }
+
+        /* 排序箭頭圖示 */
+        .filter__link::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 4px solid transparent;
+        }
+
+        .filter__link.desc::after {
+            border-top-color: #fff;
+        }
+
+        .filter__link.asc::after {
+            border-bottom-color: #fff;
+        }
+
+        .table-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table-data {
+            flex: 1;
+            padding: 12px 15px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <p>Sort Table Rows by Clicking on the Table Headers - Ascending and Descending (jQuery)</p>
+    <div class="container">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item"><a id="name" class="filter__link" href="#">Name</a></div>
+                <div class="header__item"><a id="wins" class="filter__link filter__link--number" href="#">Wins</a></div>
+                <div class="header__item"><a id="draws" class="filter__link filter__link--number" href="#">Draws</a></div>
+                <div class="header__item"><a id="losses" class="filter__link filter__link--number" href="#">Losses</a></div>
+                <div class="header__item"><a id="total" class="filter__link filter__link--number" href="#">Total</a></div>
+            </div>
+            <div class="table-content">    
+                <div class="table-row">        
+                    <div class="table-data">Tom</div>
+                    <div class="table-data">2</div>
+                    <div class="table-data">0</div>
+                    <div class="table-data">1</div>
+                    <div class="table-data">5</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-data">Dick</div>
+                    <div class="table-data">1</div>
+                    <div class="table-data">1</div>
+                    <div class="table-data">2</div>
+                    <div class="table-data">3</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-data">Harry</div>
+                    <div class="table-data">0</div>
+                    <div class="table-data">2</div>
+                    <div class="table-data">2</div>
+                    <div class="table-data">2</div>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+    <!-- 載入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- JS 排序邏輯 -->
+    <script>
+        var properties = [\'name\', \'wins\', \'draws\', \'losses\', \'total\'];
+
+        $.each(properties, function (i, val) {
+            var sortOrder = 1;
+            
+            $("#" + val).click(function (e) {
+                e.preventDefault();
+                
+                var asc = sortOrder;
+                var th($(this));
+                
+                // 切換排序圖示狀態
+                $(".filter__link").removeClass("asc desc");
+                if (asc == 1) {
+                    $(this).addClass("asc");
+                    sortOrder = -1;
+                } else {
+                    $(this).addClass("desc");
+                    sortOrder = 1;
+                }
+
+                // 排序表格行
+                var rows = $(".table-content .table-row").get();
+
+                rows.sort(function (a, b) {
+                    var A = $(a).children(".table-data").eq(i).text().toUpperCase();
+                    var B = $(b).children(".table-data").eq(i).text().toUpperCase();
+
+                    // 如果是數字，轉換成數字再比較
+                    if ($.isNumeric(A) && $.isNumeric(B)) {
+                        return asc * (A - B);
+                    }
+
+                    // 文字排序
+                    if (A < B) return -asc * 1;
+                    if (A > B) return asc * 1;
+                    return 0;
+                });
+
+                $.each(rows, function (index, row) {
+                    $(".table-content").append(row);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
