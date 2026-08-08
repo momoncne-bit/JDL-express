@@ -19,8 +19,6 @@
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
-            /* 統一選項字體大小 */
-            --option-font-size: 0.875rem; 
         }
 
         * {
@@ -35,7 +33,7 @@
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
-            padding: 2rem 1rem 6rem 1rem;
+            padding: 1.5rem 1rem 6rem 1rem;
         }
 
         .container {
@@ -52,20 +50,20 @@
         /* 標題與 Logo 樣式 */
         .header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             position: relative;
         }
 
         .header-logo {
-            max-width: 280px;
-            width: 80%;
+            max-width: 260px;
+            width: 75%;
             height: auto;
             display: block;
             margin: 0 auto 0.75rem auto;
         }
 
         .header p {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--text-secondary);
         }
 
@@ -78,7 +76,7 @@
         }
 
         .form-section {
-            padding: 2rem;
+            padding: 1.75rem;
             border-bottom: 1px solid var(--border-light);
         }
 
@@ -87,9 +85,9 @@
         }
 
         .section-title {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -108,33 +106,52 @@
             font-weight: 600;
         }
 
-        /* 統一選擇區塊外框 */
-        .delivery-options {
+        /* 🎨 全新卡片式單選選項網格 (響應式設計) */
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .option-card {
+            position: relative;
             display: flex;
-            gap: 1rem;
-            flex-wrap: nowrap;
-            background: #f9fafb;
-            padding: 0.85rem 1rem;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 0.75rem;
+            background: #f8fafc;
+            border: 2px solid var(--border-light);
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
-            align-items: center;
-        }
-
-        .payment-label {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
             cursor: pointer;
-            font-size: var(--option-font-size);
+            font-size: 0.9rem;
             font-weight: 600;
-            white-space: nowrap;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            user-select: none;
         }
 
-        .payment-label input[type="radio"] {
+        .option-card input[type="radio"] {
             width: 18px;
             height: 18px;
             accent-color: var(--accent-red);
             cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .option-card:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+
+        /* 選中狀態樣式 (紅框 + 淡紅背景 + 文字加粗) */
+        .option-card:has(input:checked) {
+            border-color: var(--accent-red);
+            background-color: #fef2f2;
+            color: var(--accent-red);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(192, 0, 0, 0.08);
         }
 
         .products-grid {
@@ -303,7 +320,8 @@
         .form-label {
             display: block;
             font-weight: 600;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
         }
 
         .form-input {
@@ -324,12 +342,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
-        }
-
-        .payment-options {
-            display: flex;
-            gap: 2rem;
-            margin-top: 0.5rem;
         }
 
         .submit-btn {
@@ -392,28 +404,29 @@
             font-size: 0.9rem;
         }
 
-        @media (max-width: 768px) {
-            :root {
-                --option-font-size: 0.78rem;
-            }
-            .header-logo {
-                max-width: 220px;
-            }
+        /* 📱 手機版專屬響應式優化 */
+        @media (max-width: 640px) {
+            .header-logo { max-width: 210px; }
             .products-grid { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
-            .payment-options { flex-direction: column; gap: 1rem; }
             .floating-total { bottom: 1rem; right: 1rem; left: 1rem; width: auto; }
             
-            .delivery-options {
-                padding: 0.75rem 0.5rem;
-                gap: 0.3rem;
-                justify-content: space-between;
+            /* 手機版改為單欄縱向，完全解決爆位問題 */
+            .option-grid {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+
+            .option-card {
+                justify-content: flex-start;
+                padding: 0.85rem 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 頁頭 Logo -->
         <div class="header">
             <img src="jdl-logo.png" alt="京東物流 JDL Logo" class="header-logo">
             <p>智能報價及運單申請表</p>
@@ -421,38 +434,47 @@
 
         <form id="orderForm" class="form-container">
             
+            <!-- 區塊 1：選擇派送方法及類別 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">1</span>
                     選擇派送方法及類別
                 </h2>
                 
+                <!-- 服務類別選單 -->
                 <div class="form-group">
                     <label class="form-label">選擇服務類別：</label>
-                    <div class="delivery-options">
-                        <label class="payment-label">
-                            <input type="radio" name="serviceType" value="standard" checked> 京東標快 (T+1)
+                    <div class="option-grid">
+                        <label class="option-card">
+                            <input type="radio" name="serviceType" value="standard" checked>
+                            <span>京東標快 (T+1)</span>
                         </label>
-                        <label class="payment-label">
-                            <input type="radio" name="serviceType" value="express"> 京東特快 (4小時)
+                        <label class="option-card">
+                            <input type="radio" name="serviceType" value="express">
+                            <span>京東特快 (4小時)</span>
                         </label>
-                        <label class="payment-label">
-                            <input type="radio" name="serviceType" value="heavy"> 京快重貨 (T+1)
+                        <label class="option-card">
+                            <input type="radio" name="serviceType" value="heavy">
+                            <span>京快重貨 (T+1)</span>
                         </label>
                     </div>
                 </div>
 
+                <!-- 派送模式選單 -->
                 <div class="form-group">
                     <label class="form-label">選擇派送模式：</label>
-                    <div class="delivery-options">
-                        <label class="payment-label">
-                            <input type="radio" name="deliveryMethod" value="d2d" checked> 門到門
+                    <div class="option-grid">
+                        <label class="option-card">
+                            <input type="radio" name="deliveryMethod" value="d2d" checked>
+                            <span>門到門</span>
                         </label>
-                        <label class="payment-label">
-                            <input type="radio" name="deliveryMethod" value="d2s"> 門到店 / 店到門
+                        <label class="option-card">
+                            <input type="radio" name="deliveryMethod" value="d2s">
+                            <span>門到店 / 店到門</span>
                         </label>
-                        <label class="payment-label">
-                            <input type="radio" name="deliveryMethod" value="s2s"> 店到店
+                        <label class="option-card">
+                            <input type="radio" name="deliveryMethod" value="s2s">
+                            <span>店到店</span>
                         </label>
                     </div>
                 </div>
@@ -461,18 +483,21 @@
                 </small>
             </div>
 
+            <!-- 區塊 2：選擇寄件項目 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">2</span>
                     選擇寄件項目與重量 (單選)
                 </h2>
                 <div class="products-grid" id="productsGrid">
-                    </div>
+                    <!-- JS 動態生成 -->
+                </div>
                 <small style="color: var(--text-secondary); display: block; margin-top: 12px;">
                     💡 提示：本表顯示為標準官方運費。送出申請後，專員於後台建立運單時可為您申請 **9 折優惠**！
                 </small>
             </div>
 
+            <!-- 區塊 3：寄件人資料 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">3</span>
@@ -497,6 +522,7 @@
                 </div>
             </div>
 
+            <!-- 區塊 4：收件人資料 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">4</span>
@@ -521,20 +547,21 @@
                 </div>
             </div>
 
+            <!-- 區塊 5：付款方式 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">5</span>
                     繳款方法 (Payment Method)
                 </h2>
                 <div class="form-group">
-                    <div class="payment-options">
-                        <label class="payment-label">
+                    <div class="option-grid">
+                        <label class="option-card">
                             <input type="radio" name="paymentMethod" value="寄件人支付 (寄付)" checked>
-                            寄件人支付 (寄付)
+                            <span>寄件人支付 (寄付)</span>
                         </label>
-                        <label class="payment-label">
+                        <label class="option-card">
                             <input type="radio" name="paymentMethod" value="收件人支付 (到付)">
-                            收件人支付 (到付)
+                            <span>收件人支付 (到付)</span>
                         </label>
                     </div>
                 </div>
@@ -544,6 +571,7 @@
         </form>
     </div>
 
+    <!-- 浮動運費摘要面板 -->
     <div class="floating-total" id="floatingTotal">
         <div class="floating-total-header">
             <span>📋 運費摘要</span>
@@ -556,7 +584,7 @@
             </div>
         </div>
     </div>
-    <br><br><br><br>
+
     <script>
         const products = [
             { id: 'doc', name: '文件', description: '適用於各類商業文件、信函寄遞 (0.5kg 以內)。' },
@@ -565,7 +593,7 @@
 
         let selectedProducts = new Map();
 
-        // 最新運費價格計算引擎
+        // 運費價格計算引擎
         function calculatePrice(id, weight, serviceType, deliveryMethod) {
             if (serviceType === 'express') {
                 deliveryMethod = 'd2d'; 
@@ -582,7 +610,7 @@
                     if (deliveryMethod === 's2s') {
                         return { finalPrice: 14 };
                     }
-                    return { finalPrice: 17 }; // d2d / d2s
+                    return { finalPrice: 17 };
                 }
             }
 
@@ -601,7 +629,6 @@
                     if (weight <= 59) return { finalPrice: 184 };
                     if (weight <= 79) return { finalPrice: 230 };
                     if (weight <= 300) return { finalPrice: 276 };
-                    // 300kg 以上
                     let extraWeight = Math.ceil(weight - 300);
                     return { finalPrice: 276 + (extraWeight * 0.7) };
                 }
