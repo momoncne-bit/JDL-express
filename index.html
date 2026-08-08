@@ -14,9 +14,9 @@
             --text-primary: #1f2937;
             --text-secondary: #6b7280;
             --border-light: #e5e7eb;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
         }
 
         * {
@@ -29,8 +29,8 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1.5rem 1rem 6rem 1rem;
+            line-height: 1.4;
+            padding: 1rem 0.75rem 6.5rem 0.75rem;
         }
 
         .container {
@@ -40,32 +40,33 @@
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .header-logo {
-            max-width: 240px;
-            width: 75%;
+            max-width: 180px;
+            width: 60%;
             height: auto;
             display: block;
-            margin: 0 auto 0.75rem auto;
+            margin: 0 auto 0.25rem auto;
         }
 
         .header p {
-            font-size: 1.05rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
 
         .form-container {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             overflow: hidden;
             border: 1px solid var(--border-light);
         }
 
+        /* 精簡型表單區塊 */
         .form-section {
-            padding: 1.75rem;
+            padding: 1rem;
             border-bottom: 1px solid var(--border-light);
         }
 
@@ -74,133 +75,138 @@
         }
 
         .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .section-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: var(--accent-red);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        /* 📱 防爆位響應式單選按鈕網格 */
-        .option-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin-top: 0.5rem;
-        }
-
-        .option-card {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.85rem 0.75rem;
-            background: #f8fafc;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .option-card input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-red);
-            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
             flex-shrink: 0;
         }
 
-        .option-card:hover {
-            border-color: #cbd5e1;
-            background: #f1f5f9;
+        /* 📱 橫向極簡膠囊按鈕 (Segmented Control) */
+        .compact-group {
+            margin-bottom: 0.6rem;
         }
 
-        .option-card:has(input:checked) {
-            border-color: var(--accent-red);
-            background-color: #fef2f2;
-            color: var(--accent-red);
+        .compact-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .compact-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .segmented-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 3px;
+            border-radius: var(--radius-sm);
+        }
+
+        .segmented-btn {
+            position: relative;
+            text-align: center;
+            padding: 0.45rem 0.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .segmented-btn input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .segmented-btn:has(input:checked) {
+            background-color: var(--accent-red);
+            color: #ffffff;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(192, 0, 0, 0.08);
+            box-shadow: 0 2px 4px rgba(192, 0, 0, 0.2);
         }
 
         /* 寄件項目與重量卡片 */
         .combined-item-card {
-            border: 2px solid var(--accent-red);
+            border: 1.5px solid var(--accent-red);
             background: #fef2f2;
             border-radius: var(--radius-md);
-            padding: 1.5rem;
+            padding: 0.85rem 1rem;
         }
 
         .item-title-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
         .item-title {
-            font-size: 1.15rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .badge-type {
-            font-size: 0.8rem;
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
             font-weight: 700;
             background: #fee2e2;
             color: var(--accent-red);
-            border: 1px solid rgba(192, 0, 0, 0.2);
         }
 
         .weight-setting-box {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 1rem;
             background: #ffffff;
-            padding: 0.85rem 1.2rem;
-            border-radius: var(--radius-md);
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--radius-sm);
             border: 1px solid var(--border-light);
-            flex-wrap: wrap;
-            gap: 0.75rem;
         }
 
         .weight-stepper {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .btn-step {
-            width: 38px;
-            height: 38px;
+            width: 32px;
+            height: 32px;
             border: 1px solid var(--border-light);
             background: #f8fafc;
-            border-radius: 8px;
-            font-size: 1.2rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--text-primary);
             cursor: pointer;
@@ -209,48 +215,44 @@
             justify-content: center;
         }
 
-        .btn-step:hover {
-            background: #e2e8f0;
-        }
-
         .quantity-input {
-            width: 90px;
-            padding: 0.4rem;
-            border: 2px solid var(--border-light);
+            width: 65px;
+            padding: 0.2rem;
+            border: 1.5px solid var(--border-light);
             border-radius: var(--radius-sm);
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             font-weight: 800;
             color: var(--accent-red);
             background: #ffffff;
         }
 
         .price-large-display {
-            margin-top: 1rem;
+            margin-top: 0.5rem;
             text-align: right;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--accent-green);
             font-family: monospace;
         }
 
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.75rem;
         }
 
         .form-label {
             display: block;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.55rem 0.75rem;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         textarea.form-input {
@@ -260,42 +262,43 @@
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 1rem;
+            padding: 0.85rem;
             background: linear-gradient(135deg, #25D366, #128C7E);
             color: white;
             border: none;
             border-radius: var(--radius-md);
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
         }
 
         .floating-total {
             position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            left: 0.75rem;
             background: rgba(255, 255, 255, 0.98);
-            padding: 1rem 1.25rem;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
             border: 1px solid var(--border-light);
             z-index: 1000;
-            max-width: 420px;
-            width: calc(100% - 3rem);
+            max-width: 884px;
+            margin: 0 auto;
         }
 
         .floating-total-header {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--text-secondary);
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.2rem;
             border-bottom: 1px solid var(--border-light);
-            padding-bottom: 0.3rem;
+            padding-bottom: 0.2rem;
             display: flex;
             justify-content: space-between;
         }
@@ -304,16 +307,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         @media (max-width: 640px) {
-            .form-row { grid-template-columns: 1fr; }
-            .floating-total { bottom: 1rem; right: 1rem; left: 1rem; width: auto; }
-            .option-grid { grid-template-columns: 1fr; gap: 0.6rem; }
-            .option-card { justify-content: flex-start; padding: 0.85rem 1rem; }
-            .weight-setting-box { flex-direction: column; align-items: flex-start; }
-            .weight-stepper { width: 100%; justify-content: space-between; }
+            .form-row { grid-template-columns: 1fr; gap: 0.5rem; }
         }
     </style>
 </head>
@@ -326,43 +324,43 @@
 
         <form id="orderForm" class="form-container">
             
-            <!-- 區塊 1：選擇服務類別及派送模式 -->
+            <!-- 區塊 1：極簡化 服務類別及派送模式 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">1</span>
                     選擇服務類別及派送模式
                 </h2>
                 
-                <div class="form-group">
-                    <label class="form-label">選擇服務類別：</label>
-                    <div class="option-grid">
-                        <label class="option-card">
+                <div class="compact-group">
+                    <span class="compact-label">服務類別：</span>
+                    <div class="segmented-grid">
+                        <label class="segmented-btn">
                             <input type="radio" name="serviceType" value="standard" checked>
-                            <span>京東標快 (T+1天)</span>
+                            <span>標快 (T+1)</span>
                         </label>
-                        <label class="option-card">
+                        <label class="segmented-btn">
                             <input type="radio" name="serviceType" value="express">
-                            <span>京東特快 (4小時)</span>
+                            <span>特快 (4小時)</span>
                         </label>
-                        <label class="option-card">
+                        <label class="segmented-btn">
                             <input type="radio" name="serviceType" value="heavy">
-                            <span>京快重貨 (T+1天)</span>
+                            <span>重貨 (T+1)</span>
                         </label>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">選擇派送模式：</label>
-                    <div class="option-grid">
-                        <label class="option-card">
+                <div class="compact-group">
+                    <span class="compact-label">派送模式：</span>
+                    <div class="segmented-grid">
+                        <label class="segmented-btn">
                             <input type="radio" name="deliveryMethod" value="d2d" checked>
                             <span>門到門</span>
                         </label>
-                        <label class="option-card">
+                        <label class="segmented-btn">
                             <input type="radio" name="deliveryMethod" value="d2s">
-                            <span>門到店 / 店到門</span>
+                            <span>門到店/店到門</span>
                         </label>
-                        <label class="option-card">
+                        <label class="segmented-btn">
                             <input type="radio" name="deliveryMethod" value="s2s">
                             <span>店到店</span>
                         </label>
@@ -379,17 +377,17 @@
                 
                 <div class="combined-item-card">
                     <div class="item-title-row">
-                        <span class="item-title">📦 文件 / 包裹 (非文件)</span>
+                        <span class="item-title">📦 文件 / 包裹</span>
                         <span class="badge-type" id="pricingTypeBadge">📄 文件特惠價</span>
                     </div>
 
                     <div class="weight-setting-box">
-                        <span style="font-weight: 700;">總重量 (KG)：</span>
+                        <span style="font-weight: 700; font-size: 0.85rem;">總重量：</span>
                         <div class="weight-stepper">
                             <button type="button" class="btn-step" onclick="changeWeight(-0.5)">-</button>
                             <input type="number" id="weightInput" class="quantity-input" min="0.1" max="1000" step="0.1" value="0.5">
                             <button type="button" class="btn-step" onclick="changeWeight(0.5)">+</button>
-                            <span style="font-weight: 800; color: var(--accent-red);">KG</span>
+                            <span style="font-weight: 800; color: var(--accent-red); font-size: 0.9rem;">KG</span>
                         </div>
                     </div>
 
@@ -415,7 +413,7 @@
                         <input type="tel" id="senderPhone" class="form-input" required maxlength="12" inputmode="numeric" placeholder="請輸入聯絡電話">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom:0;">
                     <label class="form-label" for="senderAddress">寄件地址</label>
                     <textarea id="senderAddress" class="form-input" rows="2" required placeholder="請輸入完整寄件地址"></textarea>
                 </div>
@@ -437,7 +435,7 @@
                         <input type="tel" id="recipientPhone" class="form-input" required maxlength="12" inputmode="numeric" placeholder="請輸入聯絡電話">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom:0;">
                     <label class="form-label" for="recipientAddress">到貨地址</label>
                     <textarea id="recipientAddress" class="form-input" rows="2" required placeholder="請輸入完整收件地址"></textarea>
                 </div>
@@ -449,17 +447,15 @@
                     <span class="section-icon">5</span>
                     繳款方法 (Payment Method)
                 </h2>
-                <div class="form-group">
-                    <div class="option-grid">
-                        <label class="option-card">
-                            <input type="radio" name="paymentMethod" value="寄件人支付 (寄付)" checked>
-                            <span>寄件人支付 (寄付)</span>
-                        </label>
-                        <label class="option-card">
-                            <input type="radio" name="paymentMethod" value="收件人支付 (到付)">
-                            <span>收件人支付 (到付)</span>
-                        </label>
-                    </div>
+                <div class="segmented-grid" style="grid-template-columns: 1fr 1fr;">
+                    <label class="segmented-btn">
+                        <input type="radio" name="paymentMethod" value="寄件人支付 (寄付)" checked>
+                        <span>寄件人支付 (寄付)</span>
+                    </label>
+                    <label class="segmented-btn">
+                        <input type="radio" name="paymentMethod" value="收件人支付 (到付)">
+                        <span>收件人支付 (到付)</span>
+                    </label>
                 </div>
                 <br>
                 <button type="submit" class="submit-btn">📲 透過 WhatsApp 發送申請</button>
@@ -475,7 +471,7 @@
         </div>
         <div id="orderSummary"></div>
     </div>
-    <br><br><br><br>
+
     <script>
         let currentCalculatedPrice = 0;
         let currentError = null;
@@ -488,16 +484,13 @@
             updateAllPrices();
         }
 
-        // 依據您提供的最新完整價格表進行精準計算
         function calculatePrice(weight, serviceType, deliveryMethod) {
             if (weight <= 0) return { finalPrice: null, error: '請輸入有效重量' };
 
-            // 京東特快僅限門到門
             if (serviceType === 'express') {
                 deliveryMethod = 'd2d';
             }
 
-            // 1. 0.5kg (文件/極輕件) 專用邏輯
             if (weight <= 0.5) {
                 if (serviceType === 'heavy') {
                     return { finalPrice: null, error: '京快重貨不設 0.5kg 項目' };
@@ -507,20 +500,19 @@
                 }
                 if (serviceType === 'standard') {
                     if (deliveryMethod === 's2s') return { finalPrice: 14 };
-                    return { finalPrice: 17 }; // d2d & d2s 均為 $17
+                    return { finalPrice: 17 };
                 }
             }
 
-            // 2. 超過 20.0kg 專用邏輯
             if (weight > 20) {
                 if (serviceType === 'express') {
                     return { finalPrice: null, error: '京東特快上限為 20kg (不設此項目)' };
                 }
                 if (serviceType === 'standard') {
                     const extraKg = Math.ceil(weight - 20);
-                    let basePrice = 258; // 門到門首重
-                    if (deliveryMethod === 'd2s') basePrice = 253; // 門到店/店到門首重
-                    if (deliveryMethod === 's2s') basePrice = 248; // 店到店首重
+                    let basePrice = 258;
+                    if (deliveryMethod === 'd2s') basePrice = 253;
+                    if (deliveryMethod === 's2s') basePrice = 248;
                     return { finalPrice: basePrice + (extraKg * 13) };
                 }
                 if (serviceType === 'heavy') {
@@ -529,19 +521,17 @@
                     if (weight <= 79) return { finalPrice: 230 };
                     if (weight <= 300) return { finalPrice: 276 };
                     
-                    // 300kg 以上
                     const extraKg = Math.ceil(weight - 300);
                     return { finalPrice: 276 + (extraKg * 0.7) };
                 }
             }
 
-            // 3. 1.0kg - 20.0kg 常規重量級距
             let tier = weight;
             if (weight <= 5) {
-                tier = Math.ceil(weight * 2) / 2; // 向上取整至 0.5kg
+                tier = Math.ceil(weight * 2) / 2;
                 if (tier < 1.0) tier = 1.0;
             } else {
-                tier = Math.ceil(weight); // 向上取整至 1.0kg
+                tier = Math.ceil(weight);
             }
 
             const priceTable = {
@@ -612,7 +602,7 @@
             if (res.finalPrice === null) {
                 currentCalculatedPrice = 0;
                 currentError = res.error;
-                priceDisplay.innerHTML = `<span style="color:#ef4444; font-size:1.1rem;">⚠️ ${res.error}</span>`;
+                priceDisplay.innerHTML = `<span style="color:#ef4444; font-size:0.95rem;">⚠️ ${res.error}</span>`;
             } else {
                 currentCalculatedPrice = res.finalPrice;
                 currentError = null;
@@ -626,9 +616,9 @@
             const summaryContainer = document.getElementById('orderSummary');
             const globalMethodStr = document.querySelector('input[name="deliveryMethod"]:checked').parentNode.textContent.trim();
 
-            let serviceLabel = '京東標快 (T+1)';
-            if (serviceType === 'express') serviceLabel = '京東特快 (4小時)';
-            if (serviceType === 'heavy') serviceLabel = '京快重貨 (T+1)';
+            let serviceLabel = '標快 (T+1)';
+            if (serviceType === 'express') serviceLabel = '特快 (4小時)';
+            if (serviceType === 'heavy') serviceLabel = '重貨 (T+1)';
 
             const methodStr = serviceType === 'express' ? '門到門' : globalMethodStr;
 
@@ -647,10 +637,10 @@
                     <span style="flex:1;">
                         <strong>文件 / 包裹</strong><br>
                         <small style="color:var(--text-secondary);">
-                            ${serviceLabel} | ${methodStr} | 重量: ${weight}kg
+                            ${serviceLabel} | ${methodStr} | ${weight}kg
                         </small>
                     </span>
-                    <span style="font-family:monospace; font-size: 1.15rem; color: var(--accent-green); font-weight: bold;">
+                    <span style="font-family:monospace; font-size: 1.1rem; color: var(--accent-green); font-weight: bold;">
                         $${currentCalculatedPrice.toFixed(2)}
                     </span>
                 </div>
