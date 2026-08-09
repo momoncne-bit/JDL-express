@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京東快遞服務申請表</title>
+    
+    <style>
+        :root {
+            --bg-primary: #fdfcfb;
+            --bg-secondary: #ffffff;
+            --accent-red: #c00000;
+            --accent-green: #10b981;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-light: #e5e7eb;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.4;
+            padding: 1rem 0.75rem 6.5rem 0.75rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .header-logo {
+            max-width: 180px;
+            width: 60%;
+            height: auto;
+            display: block;
+            margin: 0 auto 0.25rem auto;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .form-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        /* 精簡型表單區塊 */
+        .form-section {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* 📱 橫向極簡膠囊按鈕 (Segmented Control) */
+        .compact-group {
+            margin-bottom: 0.6rem;
+        }
+
+        .compact-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .compact-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .segmented-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 3px;
+            border-radius: var(--radius-sm);
+        }
+
+        .segmented-btn {
+            position: relative;
+            text-align: center;
+            padding: 0.45rem 0.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .segmented-btn input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .segmented-btn:has(input:checked) {
+            background-color: var(--accent-red);
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 2px 4px rgba(192, 0, 0, 0.2);
+        }
+
+        /* 寄件項目與重量卡片 */
+        .combined-item-card {
+            border: 1.5px solid var(--accent-red);
+            background: #fef2f2;
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1rem;
+        }
+
+        .item-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .badge-type {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            background: #fee2e2;
+            color: var(--accent-red);
+        }
+
+        .weight-setting-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .weight-stepper {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-step {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-light);
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-input {
+            width: 65px;
+            padding: 0.2rem;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--accent-red);
+            background: #ffffff;
+        }
+
+        .price-large-display {
+            margin-top: 0.5rem;
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            font-family: monospace;
+        }
+
+        .form-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .floating-total {
+            position: fixed;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            left: 0.75rem;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--border-light);
+            z-index: 1000;
+            max-width: 884px;
+            margin: 0 auto;
+        }
+
+        .floating-total-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 640px) {
+            .form-row { grid-template-columns: 1fr; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="jdl-logo.png" alt="京東物流 JDL Logo" class="header-logo">
+            <p>智能報價及運單申請表</p>
+        </div>
+
+        <form id="orderForm" class="form-container">
+            
+            <!-- 區塊 1：極簡化 服務類別及派送模式 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">1</span>
+                    選擇服務類別及派送模式
+                </h2>
+                
+                <div class="compact-group">
+                    <span class="compact-label">服務類別：</span>
+                    <div class="segmented-grid">
+                        <label class="segmented-btn">
+                            <input type="radio" name="serviceType" value="standard" checked>
+                            <span>標快 (T+1)</span>
+                        </label>
+                        <label class="segmented-btn">
+                            <input type="radio" name="serviceType" value="express">
+                            <span>特快 (4小時)</span>
+                        </label>
+                        <label class="segmented-btn">
+                            <input type="radio" name="serviceType" value="heavy">
+                            <span>重貨 (T+1)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="compact-group">
+                    <span class="compact-label">派送模式：</span>
+                    <div class="segmented-grid">
+                        <label class="segmented-btn">
+                            <input type="radio" name="deliveryMethod" value="d2d" checked>
+                            <span>門到門</span>
+                        </label>
+                        <label class="segmented-btn">
+                            <input type="radio" name="deliveryMethod" value="d2s">
+                            <span>門到店/店到門</span>
+                        </label>
+                        <label class="segmented-btn">
+                            <input type="radio" name="deliveryMethod" value="s2s">
+                            <span>店到店</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 區塊 2：寄件物品與重量 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">2</span>
+                    寄件物品與重量
+                </h2>
+                
+                <div class="combined-item-card">
+                    <div class="item-title-row">
+                        <span class="item-title">📦 文件 / 包裹</span>
+                        <span class="badge-type" id="pricingTypeBadge">📄 文件特惠價</span>
+                    </div>
+
+                    <div class="weight-setting-box">
+                        <span style="font-weight: 700; font-size: 0.85rem;">總重量：</span>
+                        <div class="weight-stepper">
+                            <button type="button" class="btn-step" onclick="changeWeight(-0.5)">-</button>
+                            <input type="number" id="weightInput" class="quantity-input" min="0.1" max="1000" step="0.1" value="0.5">
+                            <button type="button" class="btn-step" onclick="changeWeight(0.5)">+</button>
+                            <span style="font-weight: 800; color: var(--accent-red); font-size: 0.9rem;">KG</span>
+                        </div>
+                    </div>
+
+                    <div class="price-large-display" id="itemPriceDisplay">
+                        $17.00
+                    </div>
+                </div>
+            </div>
+
+            <!-- 區塊 3：寄件人資料 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">3</span>
+                    寄件人資料 (Sender)
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="senderName">寄件人名稱</label>
+                        <input type="text" id="senderName" class="form-input" required placeholder="請輸入姓名或公司名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="senderPhone">聯絡電話</label>
+                        <input type="tel" id="senderPhone" class="form-input" required maxlength="12" inputmode="numeric" placeholder="請輸入聯絡電話">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="senderAddress">寄件地址</label>
+                    <textarea id="senderAddress" class="form-input" rows="2" required placeholder="請輸入完整寄件地址"></textarea>
+                </div>
+            </div>
+
+            <!-- 區塊 4：收件人資料 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">4</span>
+                    收件人資料 (Recipient)
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="recipientName">收件人名稱</label>
+                        <input type="text" id="recipientName" class="form-input" required placeholder="請輸入姓名或公司名">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="recipientPhone">聯絡電話</label>
+                        <input type="tel" id="recipientPhone" class="form-input" required maxlength="12" inputmode="numeric" placeholder="請輸入聯絡電話">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="recipientAddress">到貨地址</label>
+                    <textarea id="recipientAddress" class="form-input" rows="2" required placeholder="請輸入完整收件地址"></textarea>
+                </div>
+            </div>
+
+            <!-- 區塊 5：付款方式 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="section-icon">5</span>
+                    繳款方法 (Payment Method)
+                </h2>
+                <div class="segmented-grid" style="grid-template-columns: 1fr 1fr;">
+                    <label class="segmented-btn">
+                        <input type="radio" name="paymentMethod" value="寄件人支付 (寄付)" checked>
+                        <span>寄件人支付 (寄付)</span>
+                    </label>
+                    <label class="segmented-btn">
+                        <input type="radio" name="paymentMethod" value="收件人支付 (到付)">
+                        <span>收件人支付 (到付)</span>
+                    </label>
+                </div>
+                <br>
+                <button type="submit" class="submit-btn">📲 透過 WhatsApp 發送申請</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 浮動運費摘要面板 -->
+    <div class="floating-total">
+        <div class="floating-total-header">
+            <span>📋 運費摘要</span>
+            <small style="color:var(--text-secondary);">預估標準價</small>
+        </div>
+        <div id="orderSummary"></div>
+    </div>
+
+    <script>
+        let currentCalculatedPrice = 0;
+        let currentError = null;
+
+        function changeWeight(delta) {
+            const input = document.getElementById('weightInput');
+            let val = parseFloat(input.value) || 0;
+            val = Math.max(0.1, parseFloat((val + delta).toFixed(1)));
+            input.value = val;
+            updateAllPrices();
+        }
+
+        function calculatePrice(weight, serviceType, deliveryMethod) {
+            if (weight <= 0) return { finalPrice: null, error: '請輸入有效重量' };
+
+            if (serviceType === 'express') {
+                deliveryMethod = 'd2d';
+            }
+
+            if (weight <= 0.5) {
+                if (serviceType === 'heavy') {
+                    return { finalPrice: null, error: '京快重貨不設 0.5kg 項目' };
+                }
+                if (serviceType === 'express') {
+                    return { finalPrice: 33 };
+                }
+                if (serviceType === 'standard') {
+                    if (deliveryMethod === 's2s') return { finalPrice: 14 };
+                    return { finalPrice: 17 };
+                }
+            }
+
+            if (weight > 20) {
+                if (serviceType === 'express') {
+                    return { finalPrice: null, error: '京東特快上限為 20kg (不設此項目)' };
+                }
+                if (serviceType === 'standard') {
+                    const extraKg = Math.ceil(weight - 20);
+                    let basePrice = 258;
+                    if (deliveryMethod === 'd2s') basePrice = 253;
+                    if (deliveryMethod === 's2s') basePrice = 248;
+                    return { finalPrice: basePrice + (extraKg * 13) };
+                }
+                if (serviceType === 'heavy') {
+                    if (weight <= 39) return { finalPrice: 155 };
+                    if (weight <= 59) return { finalPrice: 184 };
+                    if (weight <= 79) return { finalPrice: 230 };
+                    if (weight <= 300) return { finalPrice: 276 };
+                    
+                    const extraKg = Math.ceil(weight - 300);
+                    return { finalPrice: 276 + (extraKg * 0.7) };
+                }
+            }
+
+            let tier = weight;
+            if (weight <= 5) {
+                tier = Math.ceil(weight * 2) / 2;
+                if (tier < 1.0) tier = 1.0;
+            } else {
+                tier = Math.ceil(weight);
+            }
+
+            const priceTable = {
+                1.0: { express: 33, heavy: 27, standard: { d2d: 27, d2s: 22, s2s: 14 } },
+                1.5: { express: 41, heavy: 34, standard: { d2d: 34, d2s: 29, s2s: 14 } },
+                2.0: { express: 48, heavy: 40, standard: { d2d: 40, d2s: 35, s2s: 14 } },
+                2.5: { express: 56, heavy: 47, standard: { d2d: 47, d2s: 42, s2s: 24 } },
+                3.0: { express: 63, heavy: 53, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                3.5: { express: 71, heavy: 60, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                4.0: { express: 78, heavy: 66, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                4.5: { express: 86, heavy: 73, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                5.0: { express: 95, heavy: 78, standard: { d2d: 53, d2s: 48, s2s: 34 } },
+                6.0: { express: 109, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                7.0: { express: 123, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                8.0: { express: 138, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                9.0: { express: 152, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                10.0: { express: 166, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 61 } },
+                11.0: { express: 180, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                12.0: { express: 195, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                13.0: { express: 209, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                14.0: { express: 223, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                15.0: { express: 252, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                16.0: { express: 252, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                17.0: { express: 266, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                18.0: { express: 281, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                19.0: { express: 295, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                20.0: { express: 309, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } }
+            };
+
+            const data = priceTable[tier];
+            if (!data) return { finalPrice: null, error: '無此重量級距' };
+
+            if (serviceType === 'express') {
+                return { finalPrice: data.express };
+            } else if (serviceType === 'heavy') {
+                return { finalPrice: data.heavy };
+            } else {
+                return { finalPrice: data.standard[deliveryMethod] };
+            }
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('input[name="serviceType"]').forEach(r => r.addEventListener('change', updateAllPrices));
+            document.querySelectorAll('input[name="deliveryMethod"]').forEach(r => r.addEventListener('change', updateAllPrices));
+            document.getElementById('weightInput').addEventListener('input', updateAllPrices);
+            document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
+        }
+
+        function updateAllPrices() {
+            const deliveryMethod = document.querySelector('input[name="deliveryMethod"]:checked').value;
+            const serviceType = document.querySelector('input[name="serviceType"]:checked').value;
+            const weight = parseFloat(document.getElementById('weightInput').value) || 0.1;
+
+            const res = calculatePrice(weight, serviceType, deliveryMethod);
+            const badge = document.getElementById('pricingTypeBadge');
+            const priceDisplay = document.getElementById('itemPriceDisplay');
+
+            if (weight <= 0.5) {
+                badge.textContent = '📄 文件特惠價';
+                badge.style.background = '#fee2e2';
+                badge.style.color = 'var(--accent-red)';
+            } else {
+                badge.textContent = '📦 包裹標準計價';
+                badge.style.background = '#e0f2fe';
+                badge.style.color = '#0369a1';
+            }
+
+            if (res.finalPrice === null) {
+                currentCalculatedPrice = 0;
+                currentError = res.error;
+                priceDisplay.innerHTML = `<span style="color:#ef4444; font-size:0.95rem;">⚠️ ${res.error}</span>`;
+            } else {
+                currentCalculatedPrice = res.finalPrice;
+                currentError = null;
+                priceDisplay.textContent = `$${res.finalPrice.toFixed(2)}`;
+            }
+
+            updateOrderSummary(weight, serviceType, deliveryMethod);
+        }
+
+        function updateOrderSummary(weight, serviceType, deliveryMethod) {
+            const summaryContainer = document.getElementById('orderSummary');
+            const globalMethodStr = document.querySelector('input[name="deliveryMethod"]:checked').parentNode.textContent.trim();
+
+            let serviceLabel = '標快 (T+1)';
+            if (serviceType === 'express') serviceLabel = '特快 (4小時)';
+            if (serviceType === 'heavy') serviceLabel = '重貨 (T+1)';
+
+            const methodStr = serviceType === 'express' ? '門到門' : globalMethodStr;
+
+            if (currentError) {
+                summaryContainer.innerHTML = `
+                    <div class="summary-row">
+                        <span style="color:#ef4444; font-weight:bold;">${currentError}</span>
+                        <span style="color:#ef4444; font-weight:bold;">無法計算</span>
+                    </div>
+                `;
+                return;
+            }
+
+            summaryContainer.innerHTML = `
+                <div class="summary-row">
+                    <span style="flex:1;">
+                        <strong>文件 / 包裹</strong><br>
+                        <small style="color:var(--text-secondary);">
+                            ${serviceLabel} | ${methodStr} | ${weight}kg
+                        </small>
+                    </span>
+                    <span style="font-family:monospace; font-size: 1.1rem; color: var(--accent-green); font-weight: bold;">
+                        $${currentCalculatedPrice.toFixed(2)}
+                    </span>
+                </div>
+            `;
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            if (currentError) {
+                alert('提示：' + currentError);
+                return;
+            }
+
+            const weight = parseFloat(document.getElementById('weightInput').value) || 0.1;
+            const serviceType = document.querySelector('input[name="serviceType"]:checked').value;
+            const globalMethodStr = document.querySelector('input[name="deliveryMethod"]:checked').parentNode.textContent.trim();
+
+            let serviceLabel = '京東標快 (T+1)';
+            if (serviceType === 'express') serviceLabel = '京東特快 (4小時)';
+            if (serviceType === 'heavy') serviceLabel = '京快重貨 (T+1)';
+
+            const methodStr = serviceType === 'express' ? '門到門' : globalMethodStr;
+
+            let orderDetails = "📦 *【京東快遞 - 新運單申請】*\n\n";
+            orderDetails += "*--- 寄件項目 ---*\n";
+            orderDetails += `• 類型: 文件 / 包裹\n`;
+            orderDetails += `  服務: ${serviceLabel}\n`;
+            orderDetails += `  方式: ${methodStr}\n`;
+            orderDetails += `  重量: ${weight}kg\n`;
+            orderDetails += `*預估標準總金額: $${currentCalculatedPrice.toFixed(2)}*\n\n`;
+
+            const senderName = document.getElementById('senderName').value;
+            const senderPhone = document.getElementById('senderPhone').value;
+            const senderAddress = document.getElementById('senderAddress').value;
+
+            const recipientName = document.getElementById('recipientName').value;
+            const recipientPhone = document.getElementById('recipientPhone').value;
+            const recipientAddress = document.getElementById('recipientAddress').value;
+
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            orderDetails += "*--- 寄件人資料 ---*\n";
+            orderDetails += `👤 名稱: ${senderName}\n`;
+            orderDetails += `📞 電話: ${senderPhone}\n`;
+            orderDetails += `📍 地址: ${senderAddress}\n\n`;
+
+            orderDetails += "*--- 收件人資料 ---*\n";
+            orderDetails += `👤 名稱: ${recipientName}\n`;
+            orderDetails += `📞 電話: ${recipientPhone}\n`;
+            orderDetails += `📍 地址: ${recipientAddress}\n\n`;
+
+            orderDetails += "*--- 繳款方法 ---*\n";
+            orderDetails += `💳 選擇: ${paymentMethod}`;
+
+            const myWhatsAppNumber = "85261148411"; 
+            const encodedMessage = encodeURIComponent(orderDetails);
+            window.open(`https://wa.me/${myWhatsAppNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            updateAllPrices();
+        });
+    </script>
+</body>
+</html>
