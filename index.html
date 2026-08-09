@@ -4,7 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>京東快遞服務申請表</title>
-    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VL0L3652B4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-VL0L3652B4');
+    </script>
+
+    <!-- Meta Pixel (Facebook Pixel) 追蹤碼 -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      
+      fbq('init', 'YOUR_PIXEL_ID');
+      fbq('track', 'PageView');
+    </script>
+    <noscript>
+      <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+    </noscript>
+
     <style>
         :root {
             --bg-primary: #fdfcfb;
@@ -64,7 +91,6 @@
             border: 1px solid var(--border-light);
         }
 
-        /* 精簡型表單區塊 */
         .form-section {
             padding: 1rem;
             border-bottom: 1px solid var(--border-light);
@@ -97,7 +123,6 @@
             flex-shrink: 0;
         }
 
-        /* 📱 橫向極簡膠囊按鈕 (Segmented Control) */
         .compact-group {
             margin-bottom: 0.6rem;
         }
@@ -154,7 +179,6 @@
             box-shadow: 0 2px 4px rgba(192, 0, 0, 0.2);
         }
 
-        /* 寄件項目與重量卡片 */
         .combined-item-card {
             border: 1.5px solid var(--accent-red);
             background: #fef2f2;
@@ -253,6 +277,12 @@
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
             font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #25D366;
         }
 
         textarea.form-input {
@@ -265,16 +295,40 @@
             gap: 0.75rem;
         }
 
+        /* 🟢 WhatsApp 提交按鈕基礎樣式 */
         .submit-btn {
             width: 100%;
-            padding: 0.85rem;
+            padding: 0.9rem;
             background: linear-gradient(135deg, #25D366, #128C7E);
             color: white;
             border: none;
             border-radius: var(--radius-md);
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* ✨ 當表單填寫完畢時的顯眼脈衝光暈動畫 */
+        .submit-btn.ready-to-submit {
+            animation: pulse-glow 1.5s infinite ease-in-out;
+            background: linear-gradient(135deg, #20bd5a, #0e7065);
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 14px rgba(37, 211, 102, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
         }
 
         .floating-total {
@@ -324,7 +378,7 @@
 
         <form id="orderForm" class="form-container">
             
-            <!-- 區塊 1：極簡化 服務類別及派送模式 -->
+            <!-- 區塊 1：服務類別及派送模式 -->
             <div class="form-section">
                 <h2 class="section-title">
                     <span class="section-icon">1</span>
@@ -458,7 +512,7 @@
                     </label>
                 </div>
                 <br>
-                <button type="submit" class="submit-btn">📲 透過 WhatsApp 發送申請</button>
+                <button type="submit" class="submit-btn" id="submitBtn">📲 透過 WhatsApp 向運單服務員 代辦</button>
             </div>
         </form>
     </div>
@@ -573,11 +627,33 @@
             }
         }
 
+        // ✨ 檢查表單是否完全填妥（觸發按鈕動畫）
+        function checkFormValidity() {
+            const form = document.getElementById('orderForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 使用 HTML5 原生 checkValidity 檢查所有 required 欄位
+            const isFormValid = form.checkValidity() && !currentError;
+
+            if (isFormValid) {
+                submitBtn.classList.add('ready-to-submit');
+            } else {
+                submitBtn.classList.remove('ready-to-submit');
+            }
+        }
+
         function setupEventListeners() {
+            const form = document.getElementById('orderForm');
+            
             document.querySelectorAll('input[name="serviceType"]').forEach(r => r.addEventListener('change', updateAllPrices));
             document.querySelectorAll('input[name="deliveryMethod"]').forEach(r => r.addEventListener('change', updateAllPrices));
             document.getElementById('weightInput').addEventListener('input', updateAllPrices);
-            document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
+            
+            // 監聽表單輸入事件，隨時更新按鈕動畫狀態
+            form.addEventListener('input', checkFormValidity);
+            form.addEventListener('change', checkFormValidity);
+            
+            form.addEventListener('submit', handleFormSubmit);
         }
 
         function updateAllPrices() {
@@ -610,6 +686,7 @@
             }
 
             updateOrderSummary(weight, serviceType, deliveryMethod);
+            checkFormValidity(); // 計算運費後同步驗證表單動畫
         }
 
         function updateOrderSummary(weight, serviceType, deliveryMethod) {
