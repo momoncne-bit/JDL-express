@@ -194,14 +194,14 @@
         }
 
         .item-title {
-            font-size: 0.95rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .badge-type {
             font-size: 0.75rem;
-            padding: 0.15rem 0.5rem;
+            padding: 0.8rem 1.0rem;
             border-radius: 12px;
             font-weight: 700;
             background: #fee2e2;
@@ -210,10 +210,11 @@
 
         .weight-setting-box {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column; /* 👈 改為上下分行 */
+            align-items: flex-start;
+            gap: 0.5rem;
             background: #ffffff;
-            padding: 0.5rem 0.8rem;
+            padding: 0.8rem;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-light);
         }
@@ -221,34 +222,28 @@
         .weight-stepper {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-        }
-
-        .btn-step {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-light);
-            background: #f8fafc;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 0.5rem;
+            width: 100%; /* 👈 佔滿整行寬度 */
         }
 
         .quantity-input {
-            width: 65px;
-            padding: 0.2rem;
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            padding: 0.5rem;
             border: 1.5px solid var(--border-light);
             border-radius: var(--radius-sm);
             text-align: center;
-            font-size: 1.15rem;
+            font-size: 1.4rem; /* 放大數字 */
             font-weight: 800;
             color: var(--accent-red);
-            background: #ffffff;
+        }
+
+        .btn-step {
+            width: 42px;
+            height: 42px;
+            font-size: 1.3rem;
+            flex-shrink: 0;
         }
 
         .price-large-display {
@@ -431,15 +426,17 @@
                 
                 <div class="combined-item-card">
                     <div class="item-title-row">
-                        <span class="item-title">📦 文件 / 包裹</span>
+                        <span class="item-title">📦 文件 / 包裹 <br>
+                        <span style="font-weight: 700; font-size: 0.85rem;">總重量：</span>
+                        </span>
                         <span class="badge-type" id="pricingTypeBadge">📄 文件特惠價</span>
                     </div>
 
                     <div class="weight-setting-box">
-                        <span style="font-weight: 700; font-size: 0.85rem;">總重量：</span>
+                        
                         <div class="weight-stepper">
                             <button type="button" class="btn-step" onclick="changeWeight(-0.5)">-</button>
-                            <input type="number" id="weightInput" class="quantity-input" min="0.1" max="1000" step="0.1" value="0.5">
+                            <input type="number" id="weightInput" class="quantity-input" min="0.3" max="3000" step="0.3" value="0.5">
                             <button type="button" class="btn-step" onclick="changeWeight(0.5)">+</button>
                             <span style="font-weight: 800; color: var(--accent-red); font-size: 0.9rem;">KG</span>
                         </div>
@@ -521,7 +518,7 @@
     <div class="floating-total">
         <div class="floating-total-header">
             <span>📋 運費摘要</span>
-            <small style="color:var(--text-secondary);">預估標準價</small>
+            <small style="color:var(--text-secondary);">預估標準 港幣價</small>
         </div>
         <div id="orderSummary"></div>
     </div>
