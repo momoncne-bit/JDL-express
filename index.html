@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>京東快遞服務申請表</title>
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VL0L3652B4"></script>
     <script>
@@ -194,56 +195,67 @@
         }
 
         .item-title {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .badge-type {
             font-size: 0.75rem;
-            padding: 0.8rem 1.0rem;
+            padding: 0.15rem 0.5rem;
             border-radius: 12px;
             font-weight: 700;
             background: #fee2e2;
             color: var(--accent-red);
         }
 
+        /* 📐 重量設置容器：自動拉伸佔滿整體闊度 */
         .weight-setting-box {
             display: flex;
-            flex-direction: column; /* 👈 改為上下分行 */
-            align-items: flex-start;
-            gap: 0.5rem;
+            align-items: center;
+            justify-content: space-between;
             background: #ffffff;
-            padding: 0.8rem;
+            padding: 0.6rem 0.8rem;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-light);
+            gap: 0.75rem;
         }
 
         .weight-stepper {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            width: 100%; /* 👈 佔滿整行寬度 */
-        }
-
-        .quantity-input {
-            flex: 1;
-            width: 100%;
-            min-width: 0;
-            padding: 0.5rem;
-            border: 1.5px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            text-align: center;
-            font-size: 1.4rem; /* 放大數字 */
-            font-weight: 800;
-            color: var(--accent-red);
+            flex: 1; /* 👈 伸展佔滿空間 */
         }
 
         .btn-step {
-            width: 42px;
-            height: 42px;
-            font-size: 1.3rem;
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--border-light);
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+        }
+
+        .quantity-input {
+            flex: 1; /* 👈 自動放大佔滿按鈕之間的闊度 */
+            width: 100%;
+            min-width: 0;
+            padding: 0.4rem 0.2rem;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-red);
+            background: #ffffff;
         }
 
         .price-large-display {
@@ -290,7 +302,6 @@
             gap: 0.75rem;
         }
 
-        /* 🟢 WhatsApp 提交按鈕基礎樣式 */
         .submit-btn {
             width: 100%;
             padding: 0.9rem;
@@ -305,7 +316,6 @@
             position: relative;
         }
 
-        /* ✨ 當表單填寫完畢時的顯眼脈衝光暈動畫 */
         .submit-btn.ready-to-submit {
             animation: pulse-glow 1.5s infinite ease-in-out;
             background: linear-gradient(135deg, #20bd5a, #0e7065);
@@ -426,24 +436,23 @@
                 
                 <div class="combined-item-card">
                     <div class="item-title-row">
-                        <span class="item-title">📦 文件 / 包裹 <br>
-                        <span style="font-weight: 700; font-size: 0.85rem;">總重量：</span>
-                        </span>
+                        <span class="item-title">📦 文件 / 包裹</span>
                         <span class="badge-type" id="pricingTypeBadge">📄 文件特惠價</span>
                     </div>
 
                     <div class="weight-setting-box">
-                        
+                        <span style="font-weight: 700; font-size: 0.85rem; flex-shrink:0;">總重量：</span>
                         <div class="weight-stepper">
                             <button type="button" class="btn-step" onclick="changeWeight(-0.5)">-</button>
-                            <input type="number" id="weightInput" class="quantity-input" min="0.3" max="3000" step="0.3" value="0.5">
+                            <input type="number" id="weightInput" class="quantity-input" min="0.1" max="3000" step="0.5" value="0.5">
                             <button type="button" class="btn-step" onclick="changeWeight(0.5)">+</button>
-                            <span style="font-weight: 800; color: var(--accent-red); font-size: 0.9rem;">KG</span>
+                            <span style="font-weight: 800; color: var(--accent-red); font-size: 0.9rem; flex-shrink:0;">KG</span>
                         </div>
                     </div>
 
+                    <!-- 價格加入 HKD -->
                     <div class="price-large-display" id="itemPriceDisplay">
-                        $17.00
+                        HKD $17.00
                     </div>
                 </div>
             </div>
@@ -509,7 +518,7 @@
                     </label>
                 </div>
                 <br>
-                <button type="submit" class="submit-btn" id="submitBtn">📲 透過 WhatsApp 向運單服務員 代辦</button>
+                <button type="submit" class="submit-btn" id="submitBtn">📲 透過 WhatsApp 發送申請</button>
             </div>
         </form>
     </div>
@@ -518,7 +527,7 @@
     <div class="floating-total">
         <div class="floating-total-header">
             <span>📋 運費摘要</span>
-            <small style="color:var(--text-secondary);">預估標準 港幣價</small>
+            <small style="color:var(--text-secondary);">預估標準價</small>
         </div>
         <div id="orderSummary"></div>
     </div>
@@ -535,6 +544,7 @@
             updateAllPrices();
         }
 
+        // 依據完整 $0.5kg 梯次進階運費計算邏輯
         function calculatePrice(weight, serviceType, deliveryMethod) {
             if (weight <= 0) return { finalPrice: null, error: '請輸入有效重量' };
 
@@ -542,6 +552,7 @@
                 deliveryMethod = 'd2d';
             }
 
+            // 1. 0.5kg 特惠
             if (weight <= 0.5) {
                 if (serviceType === 'heavy') {
                     return { finalPrice: null, error: '京快重貨不設 0.5kg 項目' };
@@ -555,6 +566,7 @@
                 }
             }
 
+            // 2. 超過 20.0kg
             if (weight > 20) {
                 if (serviceType === 'express') {
                     return { finalPrice: null, error: '京東特快上限為 20kg (不設此項目)' };
@@ -577,39 +589,49 @@
                 }
             }
 
-            let tier = weight;
-            if (weight <= 5) {
-                tier = Math.ceil(weight * 2) / 2;
-                if (tier < 1.0) tier = 1.0;
-            } else {
-                tier = Math.ceil(weight);
-            }
+            // 3. 0.5kg - 20.0kg 完整 $0.5kg 級距矩陣
+            const tier = (Math.ceil(weight * 2) / 2).toFixed(1);
 
             const priceTable = {
-                1.0: { express: 33, heavy: 27, standard: { d2d: 27, d2s: 22, s2s: 14 } },
-                1.5: { express: 41, heavy: 34, standard: { d2d: 34, d2s: 29, s2s: 14 } },
-                2.0: { express: 48, heavy: 40, standard: { d2d: 40, d2s: 35, s2s: 14 } },
-                2.5: { express: 56, heavy: 47, standard: { d2d: 47, d2s: 42, s2s: 24 } },
-                3.0: { express: 63, heavy: 53, standard: { d2d: 53, d2s: 48, s2s: 24 } },
-                3.5: { express: 71, heavy: 60, standard: { d2d: 53, d2s: 48, s2s: 24 } },
-                4.0: { express: 78, heavy: 66, standard: { d2d: 53, d2s: 48, s2s: 24 } },
-                4.5: { express: 86, heavy: 73, standard: { d2d: 53, d2s: 48, s2s: 24 } },
-                5.0: { express: 95, heavy: 78, standard: { d2d: 53, d2s: 48, s2s: 34 } },
-                6.0: { express: 109, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
-                7.0: { express: 123, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
-                8.0: { express: 138, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
-                9.0: { express: 152, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
-                10.0: { express: 166, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 61 } },
-                11.0: { express: 180, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
-                12.0: { express: 195, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
-                13.0: { express: 209, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
-                14.0: { express: 223, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
-                15.0: { express: 252, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
-                16.0: { express: 252, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
-                17.0: { express: 266, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
-                18.0: { express: 281, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
-                19.0: { express: 295, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
-                20.0: { express: 309, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } }
+                "1.0": { express: 33, heavy: 27, standard: { d2d: 27, d2s: 22, s2s: 14 } },
+                "1.5": { express: 41, heavy: 34, standard: { d2d: 34, d2s: 29, s2s: 14 } },
+                "2.0": { express: 48, heavy: 40, standard: { d2d: 40, d2s: 35, s2s: 14 } },
+                "2.5": { express: 56, heavy: 47, standard: { d2d: 47, d2s: 42, s2s: 24 } },
+                "3.0": { express: 63, heavy: 53, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                "3.5": { express: 71, heavy: 60, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                "4.0": { express: 78, heavy: 66, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                "4.5": { express: 86, heavy: 73, standard: { d2d: 53, d2s: 48, s2s: 24 } },
+                "5.0": { express: 95, heavy: 78, standard: { d2d: 53, d2s: 48, s2s: 34 } },
+                "5.5": { express: 95, heavy: 78, standard: { d2d: 53, d2s: 48, s2s: 34 } },
+                "6.0": { express: 109, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "6.5": { express: 109, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "7.0": { express: 123, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "7.5": { express: 123, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "8.0": { express: 138, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "8.5": { express: 138, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "9.0": { express: 152, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "9.5": { express: 152, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 34 } },
+                "10.0": { express: 166, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 61 } },
+                "10.5": { express: 166, heavy: 81, standard: { d2d: 62, d2s: 57, s2s: 61 } },
+                "11.0": { express: 180, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "11.5": { express: 180, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "12.0": { express: 195, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "12.5": { express: 195, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "13.0": { express: 209, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "13.5": { express: 209, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "14.0": { express: 223, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "14.5": { express: 223, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "15.0": { express: 238, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "15.5": { express: 238, heavy: 118, standard: { d2d: 71, d2s: 66, s2s: 61 } },
+                "16.0": { express: 252, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "16.5": { express: 252, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "17.0": { express: 266, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "17.5": { express: 266, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "18.0": { express: 281, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "18.5": { express: 281, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "19.0": { express: 295, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "19.5": { express: 295, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } },
+                "20.0": { express: 309, heavy: 127, standard: { d2d: 80, d2s: 75, s2s: 70 } }
             };
 
             const data = priceTable[tier];
@@ -624,12 +646,9 @@
             }
         }
 
-        // ✨ 檢查表單是否完全填妥（觸發按鈕動畫）
         function checkFormValidity() {
             const form = document.getElementById('orderForm');
             const submitBtn = document.getElementById('submitBtn');
-            
-            // 使用 HTML5 原生 checkValidity 檢查所有 required 欄位
             const isFormValid = form.checkValidity() && !currentError;
 
             if (isFormValid) {
@@ -646,10 +665,8 @@
             document.querySelectorAll('input[name="deliveryMethod"]').forEach(r => r.addEventListener('change', updateAllPrices));
             document.getElementById('weightInput').addEventListener('input', updateAllPrices);
             
-            // 監聽表單輸入事件，隨時更新按鈕動畫狀態
             form.addEventListener('input', checkFormValidity);
             form.addEventListener('change', checkFormValidity);
-            
             form.addEventListener('submit', handleFormSubmit);
         }
 
@@ -679,11 +696,11 @@
             } else {
                 currentCalculatedPrice = res.finalPrice;
                 currentError = null;
-                priceDisplay.textContent = `$${res.finalPrice.toFixed(2)}`;
+                priceDisplay.textContent = `HKD $${res.finalPrice.toFixed(2)}`;
             }
 
             updateOrderSummary(weight, serviceType, deliveryMethod);
-            checkFormValidity(); // 計算運費後同步驗證表單動畫
+            checkFormValidity();
         }
 
         function updateOrderSummary(weight, serviceType, deliveryMethod) {
@@ -715,7 +732,7 @@
                         </small>
                     </span>
                     <span style="font-family:monospace; font-size: 1.1rem; color: var(--accent-green); font-weight: bold;">
-                        $${currentCalculatedPrice.toFixed(2)}
+                        HKD $${currentCalculatedPrice.toFixed(2)}
                     </span>
                 </div>
             `;
@@ -745,7 +762,7 @@
             orderDetails += `  服務: ${serviceLabel}\n`;
             orderDetails += `  方式: ${methodStr}\n`;
             orderDetails += `  重量: ${weight}kg\n`;
-            orderDetails += `*預估標準總金額: $${currentCalculatedPrice.toFixed(2)}*\n\n`;
+            orderDetails += `*預估標準總金額: HKD $${currentCalculatedPrice.toFixed(2)}*\n\n`;
 
             const senderName = document.getElementById('senderName').value;
             const senderPhone = document.getElementById('senderPhone').value;
