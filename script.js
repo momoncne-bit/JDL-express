@@ -20,7 +20,7 @@ function setupEventListeners() {
     document.getElementById('weightInput').addEventListener('input', updateAllPrices);
 }
 
-// 根據 住戶/商戶 動態生成服務類別
+// 根據 住戶/商戶 動態生成服務類別 (改為同行 compact-row 佈局)
 function renderDynamicOptions() {
     const customerTypeRadio = document.querySelector('input[name="customerType"]:checked');
     const customerType = customerTypeRadio ? customerTypeRadio.value : 'residential';
@@ -30,32 +30,35 @@ function renderDynamicOptions() {
     
     if (customerType === 'residential') {
         serviceHtml = `
-            <div class="compact-group">
+            <div class="compact-row">
                 <span class="compact-label">服務類別：</span>
-                <div class="segmented-grid" style="grid-template-columns: repeat(2, 1fr);">
-                    <label class="segmented-btn"><input type="radio" name="serviceType" value="standard" checked><span>標快 (T+1)</span></label>
-                    <label class="segmented-btn"><input type="radio" name="serviceType" value="express"><span>特快 (4小時)</span></label>
+                <div class="compact-control">
+                    <div class="segmented-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <label class="segmented-btn"><input type="radio" name="serviceType" value="standard" checked><span>標快 (T+1)</span></label>
+                        <label class="segmented-btn"><input type="radio" name="serviceType" value="express"><span>特快 (4小時)</span></label>
+                    </div>
                 </div>
             </div>
-            <div class="compact-group" id="deliveryGroup"></div>
+            <div class="compact-row" id="deliveryGroup"></div>
         `;
     } else {
         serviceHtml = `
-            <div class="compact-group">
+            <div class="compact-row">
                 <span class="compact-label">服務類別：</span>
-                <div class="segmented-grid" style="grid-template-columns: repeat(3, 1fr);">
-                    <label class="segmented-btn"><input type="radio" name="serviceType" value="standard" checked><span>標快 (T+1)</span></label>
-                    <label class="segmented-btn"><input type="radio" name="serviceType" value="express"><span>特快 (4小時)</span></label>
-                    <label class="segmented-btn"><input type="radio" name="serviceType" value="heavy"><span>重貨 (T+1)</span></label>
+                <div class="compact-control">
+                    <div class="segmented-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <label class="segmented-btn"><input type="radio" name="serviceType" value="standard" checked><span>標快 (T+1)</span></label>
+                        <label class="segmented-btn"><input type="radio" name="serviceType" value="express"><span>特快 (4小時)</span></label>
+                        <label class="segmented-btn"><input type="radio" name="serviceType" value="heavy"><span>重貨 (T+1)</span></label>
+                    </div>
                 </div>
             </div>
-            <div class="compact-group" id="deliveryGroup"></div>
+            <div class="compact-row" id="deliveryGroup"></div>
         `;
     }
 
     container.innerHTML = serviceHtml;
 
-    // 綁定服務類別點擊事件 -> 動態切換派送模式
     document.querySelectorAll('input[name="serviceType"]').forEach(r => {
         r.addEventListener('change', () => {
             renderDeliveryOptions();
@@ -63,11 +66,10 @@ function renderDynamicOptions() {
         });
     });
 
-    // 初始化渲染派送模式
     renderDeliveryOptions();
 }
 
-// 根據服務類別動態渲染「派送模式」
+// 根據服務類別動態渲染「派送模式」(改為同行 compact-row 佈局)
 function renderDeliveryOptions() {
     const customerTypeRadio = document.querySelector('input[name="customerType"]:checked');
     const customerType = customerTypeRadio ? customerTypeRadio.value : 'residential';
@@ -77,27 +79,24 @@ function renderDeliveryOptions() {
 
     if (!deliveryGroup) return;
 
-    let html = '<span class="compact-label">派送模式：</span>';
+    let html = '<span class="compact-label">派送模式：</span><div class="compact-control">';
 
     if (serviceType === 'heavy') {
-        // ✨ 重貨 (T+1)：自動標註為門到門
         html += `
-            <div style="padding: 0.55rem 0.75rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+            <div style="padding: 0.35rem 0.6rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
                 <span>門到門</span>
-                <span style="font-size: 0.75rem; color: var(--accent-green); background: #ecfdf5; padding: 2px 6px; border-radius: 4px; font-weight: 700;">自動標註</span>
+                <span style="font-size: 0.7rem; color: var(--accent-green); background: #ecfdf5; padding: 1px 5px; border-radius: 4px; font-weight: 700;">自動標註</span>
                 <input type="radio" name="deliveryMethod" value="d2d" checked style="display:none;">
             </div>
         `;
     } else if (serviceType === 'express') {
-        // 特快 (4小時)：固定門到門
         html += `
-            <div style="padding: 0.55rem 0.75rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+            <div style="padding: 0.35rem 0.6rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
                 <span>門到門（特快專屬）</span>
                 <input type="radio" name="deliveryMethod" value="d2d" checked style="display:none;">
             </div>
         `;
     } else if (customerType === 'residential') {
-        // 住戶標快：門到門 / 門到店-店到門
         html += `
             <div class="segmented-grid" style="grid-template-columns: repeat(2, 1fr);">
                 <label class="segmented-btn"><input type="radio" name="deliveryMethod" value="d2d" checked><span>門到門</span></label>
@@ -105,7 +104,6 @@ function renderDeliveryOptions() {
             </div>
         `;
     } else {
-        // 商戶標快：門到店/店到門 / 店到店
         html += `
             <div class="segmented-grid" style="grid-template-columns: repeat(2, 1fr);">
                 <label class="segmented-btn"><input type="radio" name="deliveryMethod" value="d2s" checked><span>門到店/店到門</span></label>
@@ -114,9 +112,9 @@ function renderDeliveryOptions() {
         `;
     }
 
+    html += '</div>';
     deliveryGroup.innerHTML = html;
 
-    // 重新綁定派送模式切換事件
     document.querySelectorAll('input[name="deliveryMethod"]').forEach(r => {
         r.addEventListener('change', updateAllPrices);
     });

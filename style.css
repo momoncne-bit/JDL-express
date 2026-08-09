@@ -31,7 +31,71 @@ body {
 .page { display: none; }
 .page.active { display: block; animation: fadeIn 0.3s ease-in; }
 
+/* ================= 緊湊型介面高度優化 (-20%~30% 高度) ================= */
 
+/* 1. 壓縮區塊上下 Padding 與間距 */
+.form-section {
+    padding: 0.65rem 0.85rem; /* 原為 1rem */
+}
+
+.section-title {
+    font-size: 0.92rem;
+    margin-bottom: 0.4rem; /* 原為 0.6rem */
+}
+
+/* 2. 水平同行佈局：讓標籤與按鈕組放在同一行，大幅省高 */
+.compact-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0rem;
+    margin-bottom: 0.4rem;
+}
+
+.compact-row:last-child {
+    margin-bottom: 0;
+}
+
+.compact-row .compact-label {
+    width: 72px;            /* 固定標籤寬度 */
+    flex-shrink: 0;
+    margin-bottom: 0;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.compact-row .compact-control {
+    flex: 1;                /* 按鈕自動填滿剩餘寬度 */
+    min-width: 0;
+}
+
+/* 3. 超緊湊客戶類型按鈕 (圖文橫向單行) */
+.customer-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0;
+}
+
+.customer-type-card .card-content {
+    padding: 0.35rem 0.5rem; /* 從 0.75rem 大幅壓縮 */
+    gap: 0.35rem;
+    border-width: 1.5px;
+}
+
+.customer-type-card .card-icon {
+    font-size: 0.95rem;      /* 縮小圖示 */
+}
+
+.customer-type-card .card-title {
+    font-size: 0.85rem;
+}
+
+/* 4. 壓縮分段按鈕 (segmented-btn) 的垂直高度 */
+.segmented-btn {
+    padding: 0.32rem 0.2rem; /* 從 0.45rem 縮減 */
+    font-size: 0.8rem;
+}
 /* --- ✨ 客戶類型 (主按鈕) 專屬獨立卡片樣式 --- */
 .customer-type-grid {
     display: grid;
@@ -113,7 +177,7 @@ body {
 }
 .form-section { padding: 1rem; border-bottom: 1px solid var(--border-light); }
 .form-section:last-child { border-bottom: none; }
-.section-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+.section-title { font-size: 1rem; font-weight: 700; margin: 1rem 0rem 2.3rem 0rem; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
 .section-icon { width: 20px; height: 20px; background: var(--accent-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
 .compact-group { margin-bottom: 0.8rem; }
 .compact-label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; display: block; }
@@ -144,7 +208,7 @@ textarea.form-input { resize: vertical; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 
 /* --- 按鈕樣式 --- */
-.nav-buttons-row { display: flex; gap: 0.5rem; }
+.nav-buttons-row {margin: 0.5rem; display: flex; gap: 0.5rem; }
 .submit-btn { flex: 2; padding: 0.9rem; background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; border-radius: var(--radius-md); font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
 .secondary-btn { flex: 1; padding: 0.9rem; background: #f1f5f9; color: var(--text-primary); border: 1px solid var(--border-light); border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; }
 .submit-btn.ready-to-submit { animation: pulse-glow 1.5s infinite ease-in-out; background: linear-gradient(135deg, #20bd5a, #0e7065); }

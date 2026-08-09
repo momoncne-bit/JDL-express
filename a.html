@@ -34,12 +34,14 @@
             
             <!-- ================= PAGE 1 ================= -->
             <div id="page1" class="page active" style="display: block;">
-                <!-- 區塊 1：選擇服務類別及派送模式 -->
-                <div class="form-section">
-                    <h2 class="section-title"><span class="section-icon">1</span>選擇服務類別及派送模式</h2>
-                    
-                    <div class="compact-group">
-                        <span class="compact-label">客戶類型：</span>
+            <!-- 區塊 1：選擇服務類別及派送模式 -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">1</span>選擇服務類別及派送模式</h2>
+                
+                <!-- 改為橫向同行的 compact-row 結構 -->
+                <div class="compact-row">
+                    <span class="compact-label">客戶類型：</span>
+                    <div class="compact-control">
                         <div class="customer-type-grid">
                             <label class="customer-type-card">
                                 <input type="radio" name="customerType" value="residential" checked>
@@ -57,10 +59,11 @@
                             </label>
                         </div>
                     </div>
-
-                    <!-- 動態渲染的服務類別與派送模式 -->
-                    <div id="dynamicServiceOptions"></div>
                 </div>
+
+                <!-- 動態渲染的服務類別與派送模式 -->
+                <div id="dynamicServiceOptions"></div>
+            </div>
 
                 <!-- 區塊 2：寄件物品與重量 -->
                 <div class="form-section">
