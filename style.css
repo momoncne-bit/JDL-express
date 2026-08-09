@@ -199,6 +199,28 @@ body {
 .quantity-input { flex: 1; width: 100%; min-width: 0; padding: 0.4rem 0.2rem; border: 1.5px solid var(--border-light); border-radius: var(--radius-sm); text-align: center; font-size: 1.3rem; font-weight: 800; color: var(--accent-red); background: #ffffff; }
 .price-large-display { margin-top: 0.5rem; text-align: right; font-size: 1.3rem; font-weight: 800; color: var(--accent-green); font-family: monospace; }
 
+/* 單行表單項目設定 */
+.form-group.inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;           /* 標題與輸入框之間的間距 */
+    margin-bottom: 0.5rem;  /* 下方間距 */
+}
+
+.form-group.inline .form-label {
+    width: 85px;          /* 固定標籤寬度，讓多個欄位左對齊 */
+    flex-shrink: 0;       /* 防止標籤被擠壓 */
+    margin-bottom: 0;     /* 移除原本標籤的下邊距 */
+    font-size: 0.85rem;
+    white-space: nowrap;  /* 防止文字斷行 */
+}
+
+.form-group.inline .form-input {
+    flex: 1;              /* 輸入框自動拉伸佔滿剩餘寬度 */
+    min-width: 0;
+}
+
+
 /* --- 輸入框樣式 --- */
 .form-group { margin-bottom: 0.75rem; }
 .form-label { display: block; font-weight: 600; margin-bottom: 0.3rem; font-size: 0.85rem; }
