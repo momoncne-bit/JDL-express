@@ -83,7 +83,7 @@ function renderDeliveryOptions() {
 
     if (serviceType === 'heavy') {
         html += `
-            <div style="padding: 0.35rem 0.6rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+            <div style="padding: 0.6rem 0.6rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
                 <span>門到門</span>
                 <span style="font-size: 0.7rem; color: var(--accent-green); background: #ecfdf5; padding: 1px 5px; border-radius: 4px; font-weight: 700;">自動標註</span>
                 <input type="radio" name="deliveryMethod" value="d2d" checked style="display:none;">
@@ -91,7 +91,7 @@ function renderDeliveryOptions() {
         `;
     } else if (serviceType === 'express') {
         html += `
-            <div style="padding: 0.35rem 0.6rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+            <div style="padding: 0.6rem 0.6rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
                 <span>門到門（特快專屬）</span>
                 <input type="radio" name="deliveryMethod" value="d2d" checked style="display:none;">
             </div>
