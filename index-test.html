@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京東快遞服務申請表</title>
+    <!-- 載入外部 CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google tag & Meta Pixel 追蹤碼 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VL0L3652B4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VL0L3652B4');
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="jdl-logo.png" alt="京東物流 JDL Logo" class="header-logo">
+            <p>智能報價及運單申請表</p>
+        </div>
+
+        <!-- 進度條 -->
+        <div class="progress-bar">
+            <div class="step active" id="step1">1. 服務與重量  ></div>
+            <div class="step" id="step2">2. 寄收件資料  ></div>
+            <div class="step" id="step3">3. 確認與發送</div>
+        </div>
+
+        <form id="orderForm" class="form-container">
+            
+            <!-- ================= PAGE 1 ================= -->
+            <div id="page1" class="page active" style="display: block;">
+            <!-- 區塊 1：選擇服務類別及派送模式 -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">1</span>選擇服務類別及派送模式</h2>
+                
+                <!-- 改為橫向同行的 compact-row 結構 -->
+                <div class="compact-row">
+                    <span class="compact-label">客戶類型：</span>
+                    <div class="compact-control">
+                        <div class="customer-type-grid">
+                            <label class="customer-type-card">
+                                <input type="radio" name="customerType" value="residential" checked>
+                                <div class="card-content">
+                                    <span class="card-icon">🏠</span>
+                                    <span class="card-title">住戶服務</span>
+                                </div>
+                            </label>
+                            <label class="customer-type-card">
+                                <input type="radio" name="customerType" value="commercial">
+                                <div class="card-content">
+                                    <span class="card-icon">🏢</span>
+                                    <span class="card-title">商戶服務</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 動態渲染的服務類別與派送模式 -->
+                <div id="dynamicServiceOptions"></div>
+            </div>
+
+                <!-- 區塊 2：寄件物品與重量 -->
+                <div class="form-section">
+                    <h2 class="section-title"><span class="section-icon">2</span>寄件物品與重量</h2>
+                    <div class="combined-item-card">
+                        <div class="item-title-row">
+                            <span class="item-title">📦 文件 / 包裹</span>
+                            <span class="badge-type" id="pricingTypeBadge">📄 文件特惠價</span>
+                        </div>
+                        <div class="weight-setting-box">
+                            <span style="font-weight: 700; font-size: 0.85rem; flex-shrink:0;">總重量：</span>
+                            <div class="weight-stepper">
+                                <button type="button" class="btn-step" onclick="changeWeight(-0.5)">-</button>
+                                <input type="number" id="weightInput" class="quantity-input" min="0.1" max="3000" step="0.5" value="0.5">
+                                <button type="button" class="btn-step" onclick="changeWeight(0.5)">+</button>
+                                <span style="font-weight: 800; color: var(--accent-red); font-size: 0.9rem;">KG</span>
+                            </div>
+                        </div>
+                        <div class="price-large-display" id="itemPriceDisplay">港幣 $17.00</div>
+                    </div>
+                </div>
+
+                <!-- 第 1 頁按鈕 -->
+                <div class="form-section nav-buttons">
+                    <button type="button" class="submit-btn" onclick="nextPage(2)">下一步：填寫資料 ➔</button>
+                </div>
+            </div>
+
+            <!-- ================= PAGE 2 ================= -->
+            <div id="page2" class="page" style="display: none;">
+                <!-- 區塊 3：寄件人資料 -->
+                <div class="form-section">
+                    <h2 class="section-title"><span class="section-icon">3</span>寄件人資料 (Sender)</h2>
+                    <div class="form-row">
+                        <!-- 寄件人名稱（單行） -->
+                        <div class="form-group inline">
+                            <label class="form-label" for="senderName">寄件人名稱</label>
+                            <input type="text" id="senderName" class="form-input" required placeholder="請輸入姓名或公司名">
+                        </div>
+
+                        <!-- 聯絡電話（單行） -->
+                        <div class="form-group inline">
+                            <label class="form-label" for="senderPhone">聯絡電話</label>
+                            <input type="tel" id="senderPhone" class="form-input" required maxlength="12" inputmode="numeric" placeholder="請輸入聯絡電話">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="senderAddress">寄件地址</label>
+                        <textarea id="senderAddress" class="form-input" rows="2" required placeholder="請輸入完整寄件地址"></textarea>
+                    </div>
+                </div>
+
+                <!-- 區塊 4：收件人資料 -->
+                <div class="form-section">
+                    <h2 class="section-title"><span class="section-icon">4</span>收件人資料 (Recipient)</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="recipientName">收件人名稱</label>
+                            <input type="text" id="recipientName" class="form-input" required placeholder="請輸入姓名或公司名">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="recipientPhone">聯絡電話</label>
+                            <input type="tel" id="recipientPhone" class="form-input" required maxlength="12" inputmode="numeric" placeholder="請輸入聯絡電話">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="recipientAddress">到貨地址</label>
+                        <textarea id="recipientAddress" class="form-input" rows="2" required placeholder="請輸入完整收件地址"></textarea>
+                    </div>
+                </div>
+
+                <!-- 區塊 5：繳款方法 -->
+                <div class="form-section">
+                    <h2 class="section-title"><span class="section-icon">5</span>繳款方法 (Payment Method)</h2>
+                    <div class="segmented-grid" style="grid-template-columns: 1fr 1fr;">
+                        <label class="segmented-btn">
+                            <input type="radio" name="paymentMethod" value="寄件人支付 (寄付)" checked>
+                            <span>寄件人支付 (寄付)</span>
+                        </label>
+                        <label class="segmented-btn">
+                            <input type="radio" name="paymentMethod" value="收件人支付 (到付)">
+                            <span>收件人支付 (到付)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 第 2 頁專屬導航按鈕 -->
+                <div class="form-section nav-buttons-row">
+                    <button type="button" class="secondary-btn" onclick="prevPage(1)">← 上一頁</button>
+                    <button type="button" class="submit-btn" onclick="goToPage3()">下一步：確認資料 ➔</button>
+                </div>
+            </div>
+
+            <!-- ================= PAGE 3 ================= -->
+            <div id="page3" class="page" style="display: none;">
+                <div class="form-section">
+                    <h2 class="section-title"><span class="section-icon">6</span>申請內容與運費摘要</h2>
+                    <div id="finalSummary" class="summary-box">
+                        <!-- 透過 JS 注入最終摘要內容 -->
+                    </div>
+                </div>
+
+                <div class="form-section nav-buttons-row">
+                    <button type="button" class="secondary-btn" onclick="prevPage(2)">← 返回修改</button>
+                    <button type="button" class="submit-btn ready-to-submit" onclick="sendToWhatsApp()">📲 發送到 WhatsApp</button>
+                </div>
+            </div>
+<!-- 進度條 -->
+        <div class="progress-bar">
+            <div class="step active" id="step1">1. 服務與重量  ></div>
+        </div>
+
+        <!-- 🌟 新增：Promo Banner 10+ 橫幅輪播區塊 -->
+        <div class="promo-banner-container">
+            <div class="promo-track" id="promoTrack">
+                <!-- Banner 1 -->
+                <div class="promo-card">
+                    <span class="promo-badge">限時優惠</span>
+                    <h4>🔥 新客首單立減 $20</h4>
+                    <p>輸入優惠碼 JDL2026 專享</p>
+                </div>
+                <!-- Banner 2 -->
+                <div class="promo-card">
+                    <span class="promo-badge">企業尊享</span>
+                    <h4>🏢 月結客戶大招募</h4>
+                    <p>專人對接，享有企業特惠運費</p>
+                </div>
+                <!-- Banner 3 -->
+                <div class="promo-card">
+                    <span class="promo-badge">熱門推薦</span>
+                    <h4>📦 易碎品安心寄</h4>
+                    <p>專業包裝防護，全程追蹤</p>
+                </div>
+                <!-- Banner 4 -->
+                <div class="promo-card">
+                    <span class="promo-badge">限時優惠</span>
+                    <h4>⚡ 特快專遞 4小時上門</h4>
+                    <p>工商地區急件首選</p>
+                </div>
+                <!-- Banner 5 -->
+                <div class="promo-card">
+                    <span class="promo-badge">免運活動</span>
+                    <h4>🎁 滿 $300 全港免運</h4>
+                    <p>涵蓋住宅及偏遠地區</p>
+                </div>
+                <!-- Banner 6 -->
+                <div class="promo-card">
+                    <span class="promo-badge">會員福利</span>
+                    <h4>💎 積分當錢使</h4>
+                    <p>每寄件 $10 賺取 1 積分</p>
+                </div>
+                <!-- Banner 7 -->
+                <div class="promo-card">
+                    <span class="promo-badge">限時優惠</span>
+                    <h4>🌟 住宅派送免附加費</h4>
+                    <p>全港住宅上門不加價</p>
+                </div>
+                <!-- Banner 8 -->
+                <div class="promo-card">
+                    <span class="promo-badge">服務升級</span>
+                    <h4>🛰️ 24小時實時追蹤</h4>
+                    <p>物流動態隨時掌握</p>
+                </div>
+                <!-- Banner 9 -->
+                <div class="promo-card">
+                    <span class="promo-badge">推廣活動</span>
+                    <h4>📱 App落單額外95折</h4>
+                    <p>下載京東快遞官方App</p>
+                </div>
+                <!-- Banner 10 -->
+                <div class="promo-card">
+                    <span class="promo-badge">特別公告</span>
+                    <h4>🛡️ 全程保價服務</h4>
+                    <p>寄件更安心，最高全額賠付</p>
+                </div>
+            </div>
+            <!-- 左右切換按鈕 (選用，方便電腦版用戶點擊) -->
+            <button class="promo-btn prev" onclick="scrollPromo(-1)">&#10094;</button>
+            <button class="promo-btn next" onclick="scrollPromo(1)">&#10095;</button>
+        </div>
+
+        <form id="orderForm" class="form-container">
+        </form>
+    </div>
+
+    <!-- 浮動運費摘要 
+    <div class="floating-total" id="floatingSummary">
+        <div class="floating-total-header">
+            <span>📋 運費摘要</span>
+            <small style="color:var(--text-secondary);">預估標準價</small>
+        </div>
+        <div id="orderSummary"></div>
+    </div> -->
+
+    <!-- 1. 載入主要邏輯 JS -->
+    <script src="script.js"></script>
+
+    <!-- 2. 直接在 HTML 內嵌 WhatsApp 發送功能 -->
+    <script>
+        // 最終發送至 WhatsApp
+        function sendToWhatsApp() {
+            const myPhoneNumber = "85298884497"; 
+            
+            // 確保 finalMessageString 有內容，否則從第3頁畫面讀取備份
+            if (!window.finalMessageString) {
+                const summaryEle = document.getElementById('finalSummary');
+                window.finalMessageString = summaryEle ? summaryEle.textContent : '';
+            }
+
+            const encodedText = encodeURIComponent(window.finalMessageString);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${myPhoneNumber}&text=${encodedText}`;
+            
+            // 跳轉至 WhatsApp
+            window.location.href = whatsappUrl;
+        }
+    </script>
+</body>
+</html>
