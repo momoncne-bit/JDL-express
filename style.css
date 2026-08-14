@@ -253,3 +253,107 @@ textarea.form-input { resize: vertical; }
 @media (max-width: 640px) {
     .form-row { grid-template-columns: 1fr; gap: 0.5rem; }
 }
+
+/* ================= Promo Banner 樣式 ================= */
+.promo-banner-container {
+    position: relative;
+    width: 100%;
+    margin: 15px 0 20px 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%);
+    box-shadow: 0 4px 12px rgba(225, 37, 27, 0.08);
+    border: 1px solid rgba(225, 37, 27, 0.15);
+}
+
+.promo-track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 12px;
+    scrollbar-width: none; /* Firefox 隱藏捲軸 */
+}
+
+.promo-track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari 隱藏捲軸 */
+}
+
+.promo-card {
+    flex: 0 0 240px; /* 每個 Banner 的固定闊度 */
+    background: #ffffff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border-left: 4px solid var(--accent-red, #e1251b);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.promo-card:hover {
+    transform: translateY(-2px);
+}
+
+.promo-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    background: #ffe3e3;
+    color: var(--accent-red, #e1251b);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.promo-card h4 {
+    font-size: 0.95rem;
+    color: #333;
+    margin: 4px 0;
+    font-weight: 700;
+}
+
+.promo-card p {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0;
+}
+
+/* 左右切換按鈕 (桌面版適用) */
+.promo-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 2;
+    transition: background 0.2s;
+}
+
+.promo-btn:hover {
+    background: #ffffff;
+    color: var(--accent-red, #e1251b);
+}
+
+.promo-btn.prev { left: 6px; }
+.promo-btn.next { right: 6px; }
+
+/* 手機響應式微調 */
+@media (max-width: 480px) {
+    .promo-card {
+        flex: 0 0 200px;
+    }
+    .promo-btn {
+        display: none; /* 手機直接用手指滑動，隱藏左右按鈕更清爽 */
+    }
+}

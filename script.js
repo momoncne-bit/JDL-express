@@ -120,6 +120,16 @@ function renderDeliveryOptions() {
     });
 }
 
+// 左右按鈕滾動 Promo Banner
+function scrollPromo(direction) {
+    const track = document.getElementById('promoTrack');
+    const scrollAmount = 260; // 每次滾動的距離 (配合卡片闊度+間距)
+    track.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
 // 增減重量
 function changeWeight(delta) {
     const input = document.getElementById('weightInput');
