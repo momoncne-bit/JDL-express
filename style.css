@@ -255,15 +255,30 @@ textarea.form-input { resize: vertical; }
 }
 
 /* ================= Promo Banner 樣式 ================= */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.4;
+    /* 增加底部的 padding，避免內容被固定在下方的 Banner 遮擋 */
+    padding: 1rem 0rem 9rem 0rem; 
+}
+
+/* ================= Promo Banner 樣式 (固定於底部) ================= */
 .promo-banner-container {
-    position: relative;
-    width: 100%;
-    margin: 15px 0 20px 0;
+    position: fixed;       /* 固定在視窗 */
+    bottom: 0;             /* 貼緊底部 */
+    left: 0;
+    width: 100%;           /* 佔滿全螢幕寬度 */
+    margin: 0;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0; /* 僅上方圓角 */
     background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%);
-    box-shadow: 0 4px 12px rgba(225, 37, 27, 0.08);
-    border: 1px solid rgba(225, 37, 27, 0.15);
+    box-shadow: 0 -4px 16px rgba(225, 37, 27, 0.15); /* 陰影改為向上 */
+    border-top: 1px solid rgba(225, 37, 27, 0.2);
+    border-bottom: none;
+    z-index: 1000;         /* 確保層級在最上層，不被其他元件覆蓋 */
+    backdrop-filter: blur(8px); /* 增加毛玻璃質感（選用） */
 }
 
 .promo-track {
@@ -271,7 +286,7 @@ textarea.form-input { resize: vertical; }
     gap: 12px;
     overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 12px;
+    padding: 10px 16px;
     scrollbar-width: none; /* Firefox 隱藏捲軸 */
 }
 
@@ -280,10 +295,10 @@ textarea.form-input { resize: vertical; }
 }
 
 .promo-card {
-    flex: 0 0 240px; /* 每個 Banner 的固定闊度 */
+    flex: 0 0 220px; /* 縮小一點點適應底部固定欄的高度 */
     background: #ffffff;
-    padding: 14px 16px;
-    border-radius: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     border-left: 4px solid var(--accent-red, #e1251b);
     position: relative;
@@ -297,24 +312,24 @@ textarea.form-input { resize: vertical; }
 
 .promo-badge {
     display: inline-block;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     background: #ffe3e3;
     color: var(--accent-red, #e1251b);
     padding: 2px 6px;
     border-radius: 4px;
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .promo-card h4 {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: #333;
-    margin: 4px 0;
+    margin: 2px 0;
     font-weight: 700;
 }
 
 .promo-card p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #666;
     margin: 0;
 }
@@ -327,8 +342,8 @@ textarea.form-input { resize: vertical; }
     background: rgba(255, 255, 255, 0.9);
     color: #333;
     border: none;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
@@ -336,7 +351,7 @@ textarea.form-input { resize: vertical; }
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    z-index: 2;
+    z-index: 1001;
     transition: background 0.2s;
 }
 
@@ -351,7 +366,7 @@ textarea.form-input { resize: vertical; }
 /* 手機響應式微調 */
 @media (max-width: 480px) {
     .promo-card {
-        flex: 0 0 200px;
+        flex: 0 0 190px;
     }
     .promo-btn {
         display: none; /* 手機直接用手指滑動，隱藏左右按鈕更清爽 */
